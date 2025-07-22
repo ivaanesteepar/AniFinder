@@ -18,9 +18,15 @@ Buscador web de anime que utiliza la API pública de AniList para mostrar result
 ## Cómo usar
 
 1. Clona o descarga este repositorio.
-2. Abre el archivo `index.html` en tu navegador (recomendado usar un servidor local para evitar problemas CORS).
-3. Escribe el nombre del anime en el buscador.
-4. Haz clic en cualquier resultado para abrir Crunchyroll y ver el anime.
+    ```bash
+   git clone https://github.com/tu-usuario/tu-repositorio.git
+    ```
+3. Abre el archivo `index.html` en tu navegador (recomendado usar un servidor local para evitar problemas CORS).
+   ```bash
+   python3 -m http.server
+    ```
+5. Escribe el nombre del anime en el buscador.
+6. Haz clic en cualquier resultado para abrir Crunchyroll y ver el anime.
 
 ## Mejoras futuras
 

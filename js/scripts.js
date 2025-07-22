@@ -159,12 +159,9 @@ async function buscarAnime(query) {
 
         results.innerHTML = '';
         animeList.forEach(anime => {
-            const year = anime.startDate.year;
-            const month = anime.startDate.month;
-            const day = anime.startDate.day;
             const title = anime.title.english || anime.title.romaji;
             const card = document.createElement('div');
-            
+
             card.className = 'card';
             card.innerHTML = `
                 <img src="${anime.coverImage.large}" alt="Portada de ${title}" />

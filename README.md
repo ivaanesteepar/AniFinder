@@ -20,7 +20,7 @@ Buscador web de anime que utiliza la API pública de AniList para mostrar result
 1. Clona o descarga este repositorio.
    
     ```bash
-   git clone https://github.com/tu-usuario/tu-repositorio.git
+   git clone https://github.com/ivaanesteepar/AniFinder
     ```
 3. Abre el archivo `index.html` en tu navegador (recomendado usar un servidor local para evitar problemas CORS).
    

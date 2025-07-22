@@ -1,0 +1,99 @@
+/* Contenedor fijo que cubre toda la pantalla, con fondo */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    /* todo el ancho visible de la ventana */
+    background-color: #222;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    height: 80px;
+}
+
+.navbar {
+    max-width: auto;
+    margin: 0 auto;
+    padding: 1.5rem 2rem; /* más padding vertical */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    height: 100%; /* para ocupar todo el alto del header */
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 1.75rem; /* un poco más grande */
+    padding-left: 20px;
+}
+
+.nav-links {
+    margin-left: auto;
+    list-style: none;
+    display: flex;
+    gap: 2rem; /* más espacio entre links */
+    padding-right: 20px;
+}
+
+.nav-links li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.nav-links li a:hover {
+    text-decoration: underline;
+}
+
+main h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #f06292;
+}
+
+form#registerForm {
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+form#registerForm label {
+    color: #ccc;
+    font-weight: bold;
+    display: block;
+}
+
+form#registerForm input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 6px;
+    background-color: #2b2b2b;
+    color: #fff;
+    font-size: 1rem;
+}
+
+form#registerForm input::placeholder {
+    color: #aaa;
+}
+
+form#registerForm button {
+    width: 100%;
+    padding: 12px;
+    background-color: #f06292;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+form#registerForm button:hover {
+    background-color: #ec407a;
+}

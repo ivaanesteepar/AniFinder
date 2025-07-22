@@ -32,6 +32,8 @@ Buscador web de anime que utiliza la API pública de AniList para mostrar result
 
 5. Mejoras en la interfaz: Incluir paginación, filtros avanzados (géneros, estado, temporada), modo claro, oscuro, etc.
 
+6. Migración a React: Reescribir la aplicación usando React para mejorar la mantenibilidad, facilitar la gestión del estado y optimizar la experiencia de usuario con componentes reutilizables.
+
 ---
 
 Made with ❤️ by [Iván](https://github.com/ivaanesteepar)

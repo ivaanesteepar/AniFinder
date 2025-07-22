@@ -1,4 +1,4 @@
-# anime-search
+# AniFinder
 
 Buscador web de anime que utiliza la API pública de AniList para mostrar resultados en tiempo real. Permite buscar títulos de anime y redirige a la página oficial de Crunchyroll para reproducirlos.
 

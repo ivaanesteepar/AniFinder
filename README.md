@@ -4,6 +4,8 @@ Buscador web de anime que utiliza la API pública de AniList para mostrar result
 
 **⚠️ Esta aplicación está en desarrollo y puede contener errores o funcionalidades incompletas.**
 
+Nota: Esta herramienta ha sido creada principalmente para uso personal, pero la comparto públicamente para que pueda ser útil a otras personas interesadas.
+
 ## Características
 
 - Búsqueda instantánea con sugerencias en vivo.
@@ -19,6 +21,16 @@ Buscador web de anime que utiliza la API pública de AniList para mostrar result
 2. Abre el archivo `index.html` en tu navegador (recomendado usar un servidor local para evitar problemas CORS).
 3. Escribe el nombre del anime en el buscador.
 4. Haz clic en cualquier resultado para abrir Crunchyroll y ver el anime.
+
+## Mejoras futuras
+
+1. Sistema de autenticación: Añadir login y registro de usuarios para personalizar la experiencia, guardar favoritos y gestionar listas de seguimiento.
+
+2. Restricción por edad: Implementar control parental o verificación de edad para filtrar contenido sensible o clasificado para mayores.
+
+3. Favoritos y listas personalizadas: Permitir que los usuarios guarden animes favoritos, creen listas de seguimiento y reciban recomendaciones personalizadas.
+
+5. Mejoras en la interfaz: Incluir paginación, filtros avanzados (géneros, estado, temporada), modo claro, oscuro, etc.
 
 ---
 

@@ -23,6 +23,7 @@ Buscador web de anime que utiliza la API pública de AniList para mostrar result
    git clone https://github.com/tu-usuario/tu-repositorio.git
     ```
 3. Abre el archivo `index.html` en tu navegador (recomendado usar un servidor local para evitar problemas CORS).
+   
    ```bash
    python3 -m http.server
     ```

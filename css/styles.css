@@ -68,3 +68,13 @@ h1 {
     font-size: 1.2rem;
     color: #f06292;
 }
+
+.title {
+    margin-bottom: 8px; /* espacio debajo del título */
+}
+
+.release-date {
+    font-size: 0.9em;
+    color: #fff;
+    margin-top: 0; /* opcional, para asegurarse */
+}

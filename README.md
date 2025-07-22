@@ -4,7 +4,7 @@ Buscador web de anime que utiliza la API pública de AniList para mostrar result
 
 **⚠️ Esta aplicación está en desarrollo y puede contener errores o funcionalidades incompletas.**
 
-Nota: Esta herramienta ha sido creada principalmente para uso personal, pero la comparto públicamente para que pueda ser útil a otras personas interesadas.
+> **Nota**: Esta herramienta ha sido creada principalmente para uso personal, pero la comparto públicamente para que pueda ser útil a otras personas interesadas.
 
 ## Características
 

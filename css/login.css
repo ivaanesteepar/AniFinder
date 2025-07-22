@@ -4,28 +4,45 @@ header {
     top: 0;
     left: 0;
     width: 100vw;
-    /* todo el ancho visible de la ventana */
     background-color: #222;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     height: 80px;
+    display: flex;           /* añade */
+    align-items: center;     /* añade: centra verticalmente contenido */
+    padding: 0 2rem;         /* opcional: para separar los lados */
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: linear-gradient(to bottom right, #883462, #2c2c2c);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Opcional: mantiene el fondo fijo al hacer scroll */
+    color: white;
+    font-family: Arial, sans-serif;
 }
 
 .navbar {
-    max-width: auto;
-    margin: 0 auto;
-    padding: 1.5rem 2rem; /* más padding vertical */
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    height: 100%; /* para ocupar todo el alto del header */
+    justify-content: center; /* o space-between si quieres logo a la izquierda y nav a la derecha */
+    align-items: center;     /* centra verticalmente */
+    width: 100%;
+    gap: 4rem;
+    margin: 0 auto;
 }
 
 .logo {
     font-weight: bold;
     font-size: 1.75rem; /* un poco más grande */
     padding-left: 20px;
+    text-decoration: none;
+    color: white;
 }
 
 .nav-links {
@@ -33,7 +50,7 @@ header {
     list-style: none;
     display: flex;
     gap: 2rem; /* más espacio entre links */
-    padding-right: 20px;
+    padding-right: 80px;
 }
 
 .nav-links li a {
@@ -44,7 +61,7 @@ header {
 }
 
 .nav-links li a:hover {
-    text-decoration: underline;
+    color: #f06292; /* color rosado al pasar el mouse */
 }
 
 main h1 {
@@ -97,3 +114,11 @@ form button {
 form button:hover {
     background-color: #ec407a;
 }
+
+@media (max-width: 768px) {
+    form {
+        margin: 0 1rem; /* añade margen horizontal */
+    }
+}
+
+

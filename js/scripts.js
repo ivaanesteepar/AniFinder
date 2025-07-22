@@ -60,9 +60,6 @@ async function showRecommended() {
         }
 
         animeList.forEach(anime => {
-            const year = anime.startDate?.year;
-            const month = anime.startDate?.month;
-            const day = anime.startDate?.day;
             const title = anime.title.english || anime.title.romaji;
 
             const card = document.createElement('div');

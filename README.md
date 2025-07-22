@@ -18,6 +18,7 @@ Buscador web de anime que utiliza la API pública de AniList para mostrar result
 ## Cómo usar
 
 1. Clona o descarga este repositorio.
+   
     ```bash
    git clone https://github.com/tu-usuario/tu-repositorio.git
     ```

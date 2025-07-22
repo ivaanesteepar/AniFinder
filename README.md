@@ -22,4 +22,4 @@ Buscador web de anime que utiliza la API pública de AniList para mostrar result
 
 ---
 
-  Made with ❤️ by [Iván](https://github.com/ivaanesteepar)
+Made with ❤️ by [Iván](https://github.com/ivaanesteepar)

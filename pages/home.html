@@ -7,13 +7,6 @@
     <link rel="stylesheet" href="../css/styles.css" />
     <link rel="icon" href="../img/favicon.ico" type="image/x-icon">
     <title>Home</title>
-    <script>
-        // Comprobación de sesión al cargar la página
-        // if (!localStorage.getItem("loggedIn")) {
-        //     window.location.href = "login.html";
-        // }
-
-    </script>
 </head>
 
 <body>
@@ -25,10 +18,10 @@
                     <img src="../img/logo_app.png" alt="Buscador Anime" height="90px" width="160px" />
                 </a>
             </div>
-            <ul class="nav-links">
+            <ul class="nav-links" id="mobileMenu">
                 <li><a href="../pages/categorias.html">Categorías</a></li>
                 <li><a href="../pages/favoritos.html">Favoritos</a></li>
-                <li><a href="../pages/perfil.html">Perfil</a></li>
+                <li><a href="#" id="perfilLink">Perfil</a></li>
             </ul>
         </nav>
     </header>
@@ -40,9 +33,61 @@
 
         <div id="recommendedTitle" style="display:none;">Últimos lanzamientos</div>
         <div id="results"></div>
+
+        <!-- Modal login (oculto por defecto) -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span id="closeModal" style="cursor:pointer; float:right; font-size: 20px;">&times;</span>
+                <h2>Iniciar sesión</h2>
+                <form id="loginForm">
+                    <label for="username">Usuario:</label><br>
+                    <input type="text" id="username" name="username" required><br><br>
+                    <label for="password">Contraseña:</label><br>
+                    <input type="password" id="password" name="password" required><br><br>
+                    <div class="button-container">
+                        <button>Entrar</button>
+                    </div>
+                </form>
+
+                <div style="margin-top: 20px; text-align: center; color: #f9a8d4;">
+                    ¿No tienes cuenta?
+                    <a href="#" id="registerLink"
+                        style="color: #ff69b4; text-decoration: none; font-weight: bold; cursor: pointer;">
+                        Regístrate aquí
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal registro (oculto por defecto) -->
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <span id="closeRegisterModal" style="cursor:pointer; float:right; font-size: 20px;">&times;</span>
+                <h2>Registro</h2>
+                <form id="registerForm">
+                    <label for="regUsername">Usuario:</label><br>
+                    <input type="text" id="regUsername" name="regUsername" required><br><br>
+
+                    <label for="regEmail">Correo electrónico:</label><br>
+                    <input type="email" id="regEmail" name="regEmail" required><br><br>
+
+                    <label for="regPassword">Contraseña:</label><br>
+                    <input type="password" id="regPassword" name="regPassword" required><br><br>
+
+                    <label for="regPasswordRepeat">Repite contraseña:</label><br>
+                    <input type="password" id="regPasswordRepeat" name="regPasswordRepeat" required><br><br>
+
+                    <div class="button-container">
+                        <button type="submit">Registrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </main>
 
     <script src="../js/scripts.js"></script>
+
 </body>
 
 </html>

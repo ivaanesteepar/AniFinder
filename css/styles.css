@@ -27,14 +27,16 @@ header {
 }
 
 .navbar {
-    position: relative;      /* para posicionar logo con absolute */
+    position: relative;
+    /* para posicionar logo con absolute */
     display: flex;
     align-items: center;
     width: 100%;
 }
 
 .logo {
-    position: absolute;      /* para centrar logo */
+    position: absolute;
+    /* para centrar logo */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -44,7 +46,8 @@ header {
 }
 
 .nav-links {
-    margin-left: auto;       /* empuja menú a la derecha */
+    margin-left: auto;
+    /* empuja menú a la derecha */
     list-style: none;
     display: flex;
     gap: 2rem;
@@ -151,31 +154,135 @@ h1 {
 
 .title {
     margin-bottom: 8px;
-    /* espacio debajo del título */
 }
 
 .release-date {
     font-size: 0.9em;
     color: #fff;
     margin-top: 0;
-    /* opcional, para asegurarse */
+}
+
+.menu-icon {
+    display: none;
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+}
+
+.modal {
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+}
+
+.modal-content {
+    background-color: #121212;
+    /* fondo oscuro */
+    margin: auto;
+    /* centrado automático */
+    padding: 30px 40px;
+    border-radius: 10px;
+    width: 500px;
+    /* ancho aumentado (antes 320px) */
+    min-height: 300px;
+    /* altura mínima para que sea más alto */
+    box-shadow: 0 0 15px 3px #ff69b4;
+    /* sombra rosada */
+    border: 2px solid #ff69b4;
+    /* borde rosado */
+    color: #fff;
+    /* texto blanco */
+    font-family: Arial, sans-serif;
+
+    /* Para centrar verticalmente usando flexbox */
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+#closeModal {
+    color: #ff69b4;
+    font-weight: bold;
+}
+
+#closeModal:hover {
+    color: #ff1493;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 4px;
+    margin-bottom: 12px;
+    border: 1px solid #ff69b4;
+    border-radius: 6px;
+    background-color: #222;
+    color: #fff;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder,
+input[type="email"]::placeholder {
+    color: #bbb;
+}
+
+
+button {
+    background-color: #ff69b4;
+    border: none;
+    padding: 10px 20px;
+    color: #121212;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.modal-content h2 {
+    margin-bottom: 30px !important;
+    /* espacio abajo del título */
+}
+
+button:hover {
+    background-color: #ff1493;
+}
+
+label {
+    font-weight: 600;
 }
 
 
 @media (max-width: 600px) {
     header {
-        height: auto; /* permite que crezca con su contenido */
-        min-height: 120px; /* altura mínima para que el fondo sea más largo */
-        padding: 1rem 1rem 1.5rem 1rem; /* más padding abajo para espacio */
+        height: auto;
+        /* permite que crezca con su contenido */
+        min-height: 120px;
+        /* altura mínima para que el fondo sea más largo */
+        padding: 1rem 1rem 1.5rem 1rem;
+        /* más padding abajo para espacio */
     }
 
-    body{
-        padding-top: 150px; /* espacio para el header */
+    body {
+        padding-top: 150px;
+        /* espacio para el header */
     }
 
     .logo {
         padding-bottom: 10px;
     }
+
     .navbar {
         flex-direction: column;
         align-items: center;
@@ -205,7 +312,6 @@ h1 {
         text-align: center;
     }
 
-
     #results {
         max-width: 100%;
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -219,5 +325,39 @@ h1 {
 
     .card .title {
         font-size: 0.9rem;
+    }
+
+    /* Ajustes para modales en móvil */
+    .modal-content {
+        max-width: 90% !important; /* que no sea más ancho que el 90% */
+        margin: 20px auto !important; /* menos margen arriba y abajo */
+        padding: 15px !important; /* menos padding */
+        border-radius: 8px;
+    }
+
+    /* Ajustar fuente y botones en modales para móviles */
+    .modal-content h2 {
+        font-size: 1.3rem !important;
+    }
+
+    .button-container button {
+        font-size: 1rem !important;
+        padding: 10px 0 !important;
+        width: 100% !important;
+    }
+
+    /* Ajustar inputs para que ocupen todo el ancho */
+    .modal-content input {
+        width: 100% !important;
+        padding: 8px !important;
+        font-size: 1rem !important;
+    }
+
+    /* Cerrar modal: hacer icono más visible y accesible */
+    .modal-content span#closeModal,
+    .modal-content span#closeRegisterModal {
+        font-size: 1.8rem !important;
+        top: 10px !important;
+        right: 10px !important;
     }
 }

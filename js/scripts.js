@@ -22,7 +22,7 @@ async function showRecommended() {
 
     const queryGraphQL = `
         query {
-            Page(perPage: 25) {
+            Page(perPage: 24) {
                 media(type: ANIME, sort: START_DATE_DESC) {
                     id
                     type
@@ -78,6 +78,7 @@ async function showRecommended() {
                 <div class="title">${title}</div>
             `;
             card.addEventListener('click', () => {
+                console.log('Portada:', anime.coverImage.large);  // <-- Aquí el console.log
                 const queryCrunchyroll = encodeURIComponent(title);
                 window.open(`https://www.crunchyroll.com/es/search?from=search&q=${queryCrunchyroll}`, '_blank');
             });
@@ -184,3 +185,105 @@ async function buscarAnime(query) {
         loading.style.display = 'none';
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    menuToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('active');
+    });
+});
+
+const perfilLink = document.getElementById('perfilLink');
+const loginModal = document.getElementById('loginModal');
+const closeModal = document.getElementById('closeModal');
+const loginForm = document.getElementById('loginForm');
+
+// Mostrar modal login al clicar en Perfil si no está logueado
+perfilLink.addEventListener('click', (e) => {
+    const loggedIn = localStorage.getItem('loggedIn');
+    if (loggedIn) {
+        // Si está logueado, ir a perfil.html
+        perfilLink.href = '../pages/perfil.html';
+    } else {
+        // Si no está logueado, abrir modal login y evitar navegación
+        e.preventDefault();
+        loginModal.style.display = 'block';
+        perfilLink.href = '#';
+    }
+});
+
+// Cerrar modal login
+closeModal.addEventListener('click', () => {
+    loginModal.style.display = 'none';
+});
+
+// Cerrar modal login clicando fuera
+window.addEventListener('click', (event) => {
+    if (event.target === loginModal) {
+        loginModal.style.display = 'none';
+    }
+});
+
+// Enviar formulario login
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const username = loginForm.username.value.trim();
+    const password = loginForm.password.value.trim();
+
+    if (username && password) {
+        localStorage.setItem('loggedIn', 'true');
+        localStorage.setItem('username', username);
+
+        perfilLink.textContent = username;
+        perfilLink.href = '#';
+
+        loginModal.style.display = 'none';
+        loginForm.reset();
+    } else {
+        alert('Introduce usuario y contraseña válidos');
+    }
+});
+
+// --- Código modal registro ---
+const registerLink = document.getElementById('registerLink');
+const registerModal = document.getElementById('registerModal');
+const closeRegisterModal = document.getElementById('closeRegisterModal');
+const registerForm = document.getElementById('registerForm');
+
+registerLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    loginModal.style.display = 'none';
+    registerModal.style.display = 'block';
+});
+
+closeRegisterModal.addEventListener('click', () => {
+    registerModal.style.display = 'none';
+});
+
+window.addEventListener('click', (event) => {
+    if (event.target === registerModal) {
+        registerModal.style.display = 'none';
+    }
+});
+
+registerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const username = registerForm.regUsername.value.trim();
+    const password = registerForm.regPassword.value.trim();
+    const passwordRepeat = registerForm.regPasswordRepeat.value.trim();
+
+    if (password !== passwordRepeat) {
+        alert('Las contraseñas no coinciden');
+        return;
+    }
+
+    alert(`Registro completado para ${username}`);
+    registerModal.style.display = 'none';
+    registerForm.reset();
+});
+
+
+
+

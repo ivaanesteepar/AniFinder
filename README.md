@@ -1,7 +1,7 @@
 # AniFinder
 
 <div align="center">
-  <img src="/img/logo_app.png" alt="App logo" width="250">
+  <img src="/img/logo_app.png" alt="App logo" width="250" height="250">
 </div>
 
 Buscador web de anime que utiliza la API pública de AniList para mostrar resultados en tiempo real. Permite buscar títulos de anime y redirige a la página oficial de Crunchyroll para reproducirlos.

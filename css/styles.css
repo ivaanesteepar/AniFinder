@@ -264,14 +264,14 @@ label {
     header {
         height: auto;
         /* permite que crezca con su contenido */
-        min-height: 170px;
+        min-height: 180px;
         /* altura mínima para que el fondo sea más largo */
         padding: 1rem 1rem 1.5rem 1rem;
         /* más padding abajo para espacio */
     }
 
     body {
-        padding-top: 190px;
+        padding-top: 200px;
         /* espacio para el header */
     }
 

@@ -1,5 +1,3 @@
-# AniFinder
-
 <div align="center">
   <img src="/img/logo_app.png" alt="App logo" width="500" height="500">
 </div>

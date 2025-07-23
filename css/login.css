@@ -8,7 +8,7 @@ body {
     background: linear-gradient(to bottom right, #883462, #2c2c2c);
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    background-attachment: fixed; /* Opcional: mantiene el fondo fijo al hacer scroll */
+    background-attachment: fixed;
     color: white;
     font-family: Arial, sans-serif;
 }
@@ -114,6 +114,21 @@ form button {
 form button:hover {
     background-color: #ec407a;
 }
+
+.register-text {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .register-text a {
+    color: #66aaff; /* o el color que prefieras */
+    text-decoration: none;
+  }
+  
+  .register-text a:hover {
+    text-decoration: underline;
+  }
+  
 
 @media (max-width: 768px) {
     form {

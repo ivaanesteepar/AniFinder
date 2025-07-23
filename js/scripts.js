@@ -5,6 +5,16 @@ const recommendedTitle = document.getElementById('recommendedTitle');
 
 let timeoutId = null;
 
+// Función para generar slug estilo animeflv (puede quedar para otras cosas)
+function generarSlug(titulo) {
+    return titulo
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // elimina acentos
+        .replace(/[^a-z0-9\s-]/g, "")                    // elimina caracteres no alfanuméricos
+        .trim()
+        .replace(/\s+/g, "-");                           // reemplaza espacios por guiones
+}
+
 async function showRecommended() {
     recommendedTitle.style.display = "block";
     loading.style.display = 'block';
@@ -50,7 +60,6 @@ async function showRecommended() {
             return;
         }
 
-        // Filtramos solo animes (aunque la query ya lo pide)
         const animeList = data.data.Page.media.filter(item => item.type === "ANIME");
 
         if (animeList.length === 0) {
@@ -69,9 +78,8 @@ async function showRecommended() {
                 <div class="title">${title}</div>
             `;
             card.addEventListener('click', () => {
-                console.log(anime);
-                const searchUrl = `https://www.crunchyroll.com/search?from=search&q=${encodeURIComponent(title)}`;
-                window.open(searchUrl, '_blank');
+                const queryCrunchyroll = encodeURIComponent(title);
+                window.open(`https://www.crunchyroll.com/es/search?from=search&q=${queryCrunchyroll}`, '_blank');
             });
             results.appendChild(card);
         });
@@ -102,7 +110,6 @@ input.addEventListener('input', () => {
     }, 500);
 });
 
-// Al cargar la página mostramos recomendados
 showRecommended();
 
 async function buscarAnime(query) {
@@ -145,7 +152,6 @@ async function buscarAnime(query) {
             return;
         }
 
-        // Filtramos solo animes
         const animeList = data.data.Page.media.filter(item => item.type === "ANIME");
 
         if (animeList.length === 0) {
@@ -157,17 +163,16 @@ async function buscarAnime(query) {
         results.innerHTML = '';
         animeList.forEach(anime => {
             const title = anime.title.english || anime.title.romaji;
-            const card = document.createElement('div');
 
+            const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
                 <img src="${anime.coverImage.large}" alt="Portada de ${title}" />
                 <div class="title">${title}</div>
             `;
             card.addEventListener('click', () => {
-                console.log(anime);
-                const searchUrl = `https://www.crunchyroll.com/search?from=search&q=${encodeURIComponent(title)}`;
-                window.open(searchUrl, '_blank');
+                const queryCrunchyroll = encodeURIComponent(title);
+                window.open(`https://www.crunchyroll.com/es/search?from=search&q=${queryCrunchyroll}`, '_blank');
             });
             results.appendChild(card);
         });

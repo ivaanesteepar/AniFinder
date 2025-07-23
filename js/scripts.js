@@ -27,6 +27,7 @@ async function showRecommended() {
                     id
                     type
                     title {
+                        native
                         romaji
                         english
                     }
@@ -38,6 +39,7 @@ async function showRecommended() {
                         month
                         day
                     }
+                    siteUrl
                 }
             }
         }
@@ -69,7 +71,7 @@ async function showRecommended() {
         }
 
         animeList.forEach(anime => {
-            const title = anime.title.english || anime.title.romaji;
+            const title = anime.title.romaji || anime.title.english;
 
             const card = document.createElement('div');
             card.className = 'card';
@@ -78,9 +80,8 @@ async function showRecommended() {
                 <div class="title">${title}</div>
             `;
             card.addEventListener('click', () => {
-                const slug = generarSlug(title);
-                window.open(`https://www3.animeflv.net/ver/${slug}-1`, '_blank');
-            });
+                window.open(anime.siteUrl, '_blank');
+            });            
             results.appendChild(card);
         });
     } catch (error) {
@@ -120,6 +121,7 @@ async function buscarAnime(query) {
                     id
                     type
                     title {
+                        native
                         romaji
                         english
                     }
@@ -131,6 +133,7 @@ async function buscarAnime(query) {
                         month
                         day
                     }
+                    siteUrl
                 }
             }
         }
@@ -171,9 +174,8 @@ async function buscarAnime(query) {
                 <div class="title">${title}</div>
             `;
             card.addEventListener('click', () => {
-                const slug = generarSlug(title);
-                window.open(`https://www3.animeflv.net/ver/${slug}-1`, '_blank');
-            });
+                window.open(anime.siteUrl, '_blank');
+            });            
             results.appendChild(card);
         });
 

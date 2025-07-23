@@ -2,7 +2,7 @@
   <img src="/img/logo_app.png" alt="App logo" width="500" height="500">
 </div>
 
-Buscador web de anime que utiliza la API pública de AniList para mostrar resultados en tiempo real. Permite buscar títulos de anime y redirige a la página oficial de Crunchyroll para reproducirlos.
+Buscador web de anime que utiliza la API pública de AniList para mostrar resultados en tiempo real. Permite buscar títulos de anime y redirige a la página oficial de AniList para ver detalles de cada anime.
 
 **⚠️ Esta aplicación está en desarrollo y puede contener errores o funcionalidades incompletas.**
 
@@ -12,7 +12,7 @@ Buscador web de anime que utiliza la API pública de AniList para mostrar result
 
 - Búsqueda instantánea con sugerencias en vivo.
 - Visualización de portadas y títulos en tarjetas.
-- Al pulsar una tarjeta, abre la búsqueda en Crunchyroll.
+- Al pulsar una tarjeta, abre la página oficial del anime en AniList.
 - Si el buscador está vacío, muestra animes recomendados basados en popularidad.
 - Diseño responsive y moderno con HTML, CSS y JavaScript puro.
 - Utiliza la API GraphQL pública de AniList para datos actualizados.
@@ -30,7 +30,7 @@ Buscador web de anime que utiliza la API pública de AniList para mostrar result
    python3 -m http.server
     ```
 5. Escribe el nombre del anime en el buscador.
-6. Haz clic en cualquier resultado para abrir Crunchyroll y ver el anime.
+6. Haz clic en cualquier resultado para abrir la página oficial del anime en AniList.
 
 ## Mejoras futuras
 

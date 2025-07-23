@@ -5,7 +5,7 @@ const recommendedTitle = document.getElementById('recommendedTitle');
 
 let timeoutId = null;
 
-// Función para generar slug estilo animeflv (puede quedar para otras cosas)
+// Función para generar slug estilo animeflv
 function generarSlug(titulo) {
     return titulo
         .toLowerCase()
@@ -78,9 +78,8 @@ async function showRecommended() {
                 <div class="title">${title}</div>
             `;
             card.addEventListener('click', () => {
-                console.log('Portada:', anime.coverImage.large);  // <-- Aquí el console.log
-                const queryCrunchyroll = encodeURIComponent(title);
-                window.open(`https://www.crunchyroll.com/es/search?from=search&q=${queryCrunchyroll}`, '_blank');
+                const slug = generarSlug(title);
+                window.open(`https://www3.animeflv.net/ver/${slug}-1`, '_blank');
             });
             results.appendChild(card);
         });
@@ -172,8 +171,8 @@ async function buscarAnime(query) {
                 <div class="title">${title}</div>
             `;
             card.addEventListener('click', () => {
-                const queryCrunchyroll = encodeURIComponent(title);
-                window.open(`https://www.crunchyroll.com/es/search?from=search&q=${queryCrunchyroll}`, '_blank');
+                const slug = generarSlug(title);
+                window.open(`https://www3.animeflv.net/ver/${slug}-1`, '_blank');
             });
             results.appendChild(card);
         });
@@ -283,7 +282,3 @@ registerForm.addEventListener('submit', (e) => {
     registerModal.style.display = 'none';
     registerForm.reset();
 });
-
-
-
-

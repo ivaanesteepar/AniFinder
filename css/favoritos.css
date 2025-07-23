@@ -13,44 +13,44 @@ body {
     padding-top: 100px;
 }
 
-/* Contenedor fijo que cubre toda la pantalla, con fondo */
 header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
-    /* todo el ancho visible de la ventana */
     background-color: #222;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     height: 80px;
+    display: flex;
+    align-items: center;
 }
 
 .navbar {
-    max-width: auto;
-    margin: 0 auto;
-    padding: 1.5rem 2rem; /* más padding vertical */
+    position: relative;      /* para posicionar logo con absolute */
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    color: white;
-    height: 100%; /* para ocupar todo el alto del header */
+    width: 100%;
 }
 
 .logo {
-    font-weight: bold;
-    font-size: 1.75rem; /* un poco más grande */
-    padding-left: 20px;
-    text-decoration: none;
-    color: white;
+    position: absolute;      /* para centrar logo */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    height: 80px;
+    padding-top: 5px;
 }
 
 .nav-links {
-    margin-left: auto;
+    margin-left: auto;       /* empuja menú a la derecha */
     list-style: none;
     display: flex;
-    gap: 2rem; /* más espacio entre links */
-    padding-right: 20px;
+    gap: 2rem;
+    padding-right: 80px;
+    align-items: center;
+    height: 80px;
 }
 
 .nav-links li a {

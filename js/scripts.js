@@ -1,5 +1,4 @@
 const input = document.getElementById('searchInput');
-const results = document.getElementById('results');
 const loading = document.getElementById('loading');
 
 const perfilLink = document.getElementById('perfilLink');
@@ -14,6 +13,10 @@ const registerForm = document.getElementById('registerForm');
 
 const generos = ['Action', 'Romance', 'Comedy', 'Horror', 'Fantasy'];
 
+const results = document.getElementById('results');
+const latestReleases = document.getElementById('latestReleases');
+const genreSections = document.getElementById('genreSections');
+
 let timeoutId = null;
 
 // Función para generar slug estilo animeflv
@@ -26,76 +29,11 @@ function generarSlug(titulo) {
         .replace(/\s+/g, "-");                           // reemplaza espacios por guiones
 }
 
+
 async function mostrarPorGenero() {
     const genreSections = document.getElementById('genreSections');
-    genreSections.innerHTML = '';
-
-    // 1. Cargar Últimos lanzamientos
-    const queryRecientes = `
-        query {
-            Page(perPage: 10) {
-                media(type: ANIME, sort: START_DATE_DESC) {
-                    id
-                    title {
-                        romaji
-                        english
-                    }
-                    coverImage {
-                        large
-                    }
-                    siteUrl
-                    startDate {
-                        year
-                    }
-                }
-            }
-        }
-    `;
-
-    try {
-        const response = await fetch('https://graphql.anilist.co', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({ query: queryRecientes })
-        });
-
-        const data = await response.json();
-        const animeList = data.data.Page.media;
-
-        if (animeList.length > 0) {
-            const section = document.createElement('section');
-            section.className = 'genre-section';
-            section.innerHTML = `<h2>Últimos lanzamientos</h2>`;
-
-            // Contenedor simple sin carrusel
-            const container = document.createElement('div');
-            container.className = 'genre-results';
-
-            animeList.forEach(anime => {
-                const title = anime.title.english || anime.title.romaji;
-                const year = anime.startDate?.year || 'N/A';
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <img src="${anime.coverImage.large}" alt="${title}">
-                    <div class="title">${title}</div>
-                    <div class="year">${year !== 'N/A' ? year : 'N/A'}</div>
-                    `;
-                card.addEventListener('click', () => {
-                    window.open(anime.siteUrl, '_blank');
-                });
-                container.appendChild(card);
-            });
-
-            section.appendChild(container);
-            genreSections.appendChild(section);
-        }
-
-    } catch (error) {
-        console.error("Error al cargar últimos lanzamientos:", error);
-    }
-
-    // 2. Cargar animes por cada género
+    genreSections.innerHTML = ''; // Limpia antes de cargar
+    
     for (const genero of generos) {
         const queryGraphQL = `
             query ($genre: String) {
@@ -139,7 +77,6 @@ async function mostrarPorGenero() {
                 section.className = 'genre-section';
                 section.innerHTML = `<h2>${genero}</h2>`;
 
-                // Contenedor simple sin carrusel
                 const container = document.createElement('div');
                 container.className = 'genre-results';
 
@@ -151,7 +88,7 @@ async function mostrarPorGenero() {
                     card.innerHTML = `
                         <img src="${anime.coverImage.large}" alt="${title}">
                         <div class="title">${title}</div>
-                        <div class="year">${year !== 'N/A' ? year : 'N/A'}</div>
+                        <div class="year">${year}</div>
                     `;
                     card.addEventListener('click', () => {
                         window.open(anime.siteUrl, '_blank');
@@ -169,26 +106,40 @@ async function mostrarPorGenero() {
     }
 }
 
-async function showRecommended() {
-    const query = `
-        query {
-            Page(perPage: 10) {
-                media(type: ANIME, sort: START_DATE_DESC) {
-                    id
-                    title {
-                        romaji
-                        english
-                    }
-                    coverImage {
-                        large
-                    }
-                    siteUrl
-                }
-            }
-        }
-    `;
+
+async function mostrarUltimosLanzamientos() {
+    results.innerHTML = ''; // Limpiar resultados
+    latestReleases.innerHTML = '';
+
+    const section = document.createElement('section');
+    section.className = 'genre-section';
+    section.innerHTML = '<h2>Últimos lanzamientos</h2>';
+
+    const container = document.createElement('div');
+    container.className = 'genre-results';
 
     try {
+        const query = `
+            query {
+                Page(perPage: 10) {
+                    media(type: ANIME, sort: START_DATE_DESC) {
+                        id
+                        title {
+                            romaji
+                            english
+                        }
+                        coverImage {
+                            large
+                        }
+                        siteUrl
+                        startDate {
+                            year
+                        }
+                    }
+                }
+            }
+        `;
+
         const response = await fetch('https://graphql.anilist.co', {
             method: 'POST',
             headers: {
@@ -204,43 +155,52 @@ async function showRecommended() {
         animes.forEach(anime => {
             const title = anime.title.english || anime.title.romaji;
             const card = document.createElement('div');
+            const year = anime.startDate?.year || 'N/A';
             card.className = 'card';
             card.innerHTML = `
                 <img src="${anime.coverImage.large}" alt="${title}">
                 <div class="title">${title}</div>
+                <div class="year">${year}</div>
             `;
             card.addEventListener('click', () => {
                 window.open(anime.siteUrl, '_blank');
             });
-            carouselContainer.appendChild(card);
+            container.appendChild(card);
         });
 
+        section.appendChild(container);
+        latestReleases.appendChild(section);
+
     } catch (error) {
-        console.error("Error al cargar últimos lanzamientos:", error);
+        console.error("Error al cargar recomendados:", error);
     }
 }
+
 
 input.addEventListener('input', () => {
     clearTimeout(timeoutId);
     const query = input.value.trim();
 
-    if (query.length == 0 || query.length < 2) {
-        document.getElementById('carouselContainer').style.display = 'flex';
-        document.getElementById('genreSections').style.display = 'block';
+    if (query.length == 0) {
 
         loading.style.display = 'none';
-        results.innerHTML = '';
 
+        results.innerHTML = '';
         results.style.display = 'none';
+
+        latestReleases.style.display = 'block';
+        genreSections.style.display = 'block';
 
         console.log('Mostrando recomendados y géneros');
 
-        showRecommended();
+        mostrarUltimosLanzamientos();
         mostrarPorGenero();
+
         return;
     }
 
-    document.getElementById('genreSections').style.display = 'none';
+    genreSections.style.display = 'none';
+    latestReleases.style.display = 'none';
 
     loading.style.display = 'none';
 
@@ -249,8 +209,10 @@ input.addEventListener('input', () => {
     }, 500);
 });
 
-showRecommended();
+
+mostrarUltimosLanzamientos();
 mostrarPorGenero();
+
 
 async function buscarAnime(query) {
     const queryGraphQL = `

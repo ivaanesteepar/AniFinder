@@ -1,13 +1,13 @@
-import json
+import os
 import mysql.connector
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def get_db_connection():
-    with open('config.json', 'r') as f:
-        config = json.load(f)
-
     return mysql.connector.connect(
-        host=config['host'],
-        user=config['user'],
-        password=config['password'],
-        database=config['database']
+        host=os.environ.get('DB_HOST'),
+        user=os.environ.get('DB_USER'),
+        password=os.environ.get('DB_PASSWORD'),
+        database=os.environ.get('DB_NAME')
     )

@@ -33,7 +33,7 @@ function generarSlug(titulo) {
 async function mostrarGeneros() {
     const genreSections = document.getElementById('genreSections');
     genreSections.innerHTML = ''; // Limpia antes de cargar
-    
+
     for (const genero of generos) {
         const queryGraphQL = `
             query ($genre: String) {
@@ -181,10 +181,8 @@ input.addEventListener('input', () => {
     clearTimeout(timeoutId);
     const query = input.value.trim();
 
-    if (query.length == 0) {
-
+    if (query.length === 0) {
         loading.style.display = 'none';
-
         results.innerHTML = '';
         results.style.display = 'none';
 
@@ -199,15 +197,19 @@ input.addEventListener('input', () => {
         return;
     }
 
-    genreSections.style.display = 'none';
+    // Cuando hay búsqueda
     latestReleases.style.display = 'none';
+    genreSections.style.display = 'none';
 
-    loading.style.display = 'none';
+    results.style.display = '';
+    results.innerHTML = '';  // Limpio resultados previos para que no interfieran
+    loading.style.display = 'block';
 
     timeoutId = setTimeout(() => {
         buscarAnime(query);
     }, 500);
 });
+
 
 
 async function buscarAnime(query) {

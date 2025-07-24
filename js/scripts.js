@@ -316,26 +316,6 @@ window.addEventListener('click', (event) => {
     }
 });
 
-// Enviar formulario login
-loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const username = loginForm.username.value.trim();
-    const password = loginForm.password.value.trim();
-
-    if (username && password) {
-        localStorage.setItem('loggedIn', 'true');
-        localStorage.setItem('username', username);
-
-        perfilLink.textContent = username;
-        perfilLink.href = '#';
-
-        loginModal.style.display = 'none';
-        loginForm.reset();
-    } else {
-        alert('Introduce usuario y contraseña válidos');
-    }
-});
-
 // --- Código modal registro ---
 registerLink.addEventListener('click', (e) => {
     e.preventDefault();

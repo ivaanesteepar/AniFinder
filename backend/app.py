@@ -14,6 +14,22 @@ def home():
     pages_dir = os.path.join(root_dir, "pages")
     return send_from_directory(pages_dir, "home.html")
 
+# Rutas para servir archivos estáticos
+@app.route("/css/<path:path>")
+def send_css(path):
+    css_dir = os.path.join(root_dir, "css")
+    return send_from_directory(css_dir, path)
+
+@app.route("/js/<path:path>")
+def send_js(path):
+    js_dir = os.path.join(root_dir, "js")
+    return send_from_directory(js_dir, path)
+
+@app.route("/img/<path:path>")
+def send_img(path):
+    img_dir = os.path.join(root_dir, "img")
+    return send_from_directory(img_dir, path)
+
 @app.route("/register", methods=["POST"])
 def register():
     data = request.json

@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, send_from_directory
-from db_config import get_db_connection
+from backend.db_config import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 import os

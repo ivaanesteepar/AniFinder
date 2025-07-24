@@ -90,7 +90,3 @@ def login():
         return jsonify({"success": True, "message": "Login correcto"})
     else:
         return jsonify({"success": False, "message": "Credenciales incorrectas"}), 401
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=port, debug=True)

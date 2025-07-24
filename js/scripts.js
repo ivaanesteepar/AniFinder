@@ -17,6 +17,10 @@ const results = document.getElementById('results');
 const latestReleases = document.getElementById('latestReleases');
 const genreSections = document.getElementById('genreSections');
 
+const baseURL = window.location.hostname === "localhost" 
+  ? "http://localhost:5000" 
+  : "https://web-production-90c0.up.railway.app";
+
 let timeoutId = null;
 
 // Genera un slug a partir del título
@@ -355,7 +359,7 @@ loginForm.addEventListener("submit", async (e) => {
   const email = loginForm.email.value.trim();
   const password = loginForm.password.value.trim();
 
-  const response = await fetch("http://localhost:5000/login", {
+  const response = await fetch(`${baseURL}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -367,14 +371,14 @@ loginForm.addEventListener("submit", async (e) => {
 
   if (result.success) {
     alert("Inicio de sesión exitoso");
-    document.getElementById("loginModal").style.display = "none";
+    loginModal.style.display = "none";
   } else {
     alert(result.message);
   }
 });
 
 
-document.getElementById("registerForm").addEventListener("submit", async (e) => {
+registerForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const username = registerForm.regUsername.value.trim();
@@ -388,9 +392,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     return;
   }
 
-  console.log({ username, email, password, birthday });
-
-  const response = await fetch("http://localhost:5000/register", {
+  const response = await fetch(`${baseURL}/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -402,7 +404,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
 
   if (result.success) {
     alert("Registro exitoso");
-    document.getElementById("registerModal").style.display = "none";
+    registerModal.style.display = "none";
   } else {
     alert(result.message);
   }

@@ -19,7 +19,7 @@ const genreSections = document.getElementById('genreSections');
 
 let timeoutId = null;
 
-// Función para generar slug estilo animeflv
+// Genera un slug a partir del título
 function generarSlug(titulo) {
     return titulo
         .toLowerCase()
@@ -202,14 +202,13 @@ input.addEventListener('input', () => {
     genreSections.style.display = 'none';
 
     results.style.display = '';
-    results.innerHTML = '';  // Limpio resultados previos para que no interfieran
+    results.innerHTML = ''; 
     loading.style.display = 'block';
 
     timeoutId = setTimeout(() => {
         buscarAnime(query);
     }, 500);
 });
-
 
 
 async function buscarAnime(query) {

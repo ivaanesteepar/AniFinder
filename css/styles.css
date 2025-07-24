@@ -88,7 +88,6 @@ header {
 
 #searchInput:focus {
     border-color: #ec407a;
-    /* borde un poco más fuerte al enfocar */
     box-shadow: 0 0 10px 2px #ec407a66;
     outline: none;
 }
@@ -101,8 +100,6 @@ header {
     margin: 0 auto;
 }
 
-
-
 #results p {
     white-space: nowrap;
 }
@@ -114,8 +111,6 @@ header {
     display: block;
     padding-bottom: 20px;
 }
-
-
 
 #loading {
     display: none;
@@ -165,21 +160,14 @@ header {
 
 .modal-content {
     background-color: #121212;
-    /* fondo oscuro */
     margin: auto;
-    /* centrado automático */
     padding: 30px 40px;
     border-radius: 10px;
     width: 500px;
-    /* ancho aumentado (antes 320px) */
     min-height: 300px;
-    /* sombra rosada */
     border: 2px solid #ff69b4;
-    /* borde rosado */
     color: #fff;
-    /* texto blanco */
     font-family: Arial, sans-serif;
-    /* Para centrar verticalmente usando flexbox */
     position: relative;
     top: 50%;
     transform: translateY(-50%);
@@ -232,7 +220,6 @@ button {
 
 .modal-content h2 {
     margin-bottom: 30px !important;
-    /* espacio abajo del título */
 }
 
 button:hover {
@@ -246,15 +233,10 @@ label {
 .genre-section {
     margin-top: 40px;
     margin-bottom: 40px;
-
     max-width: 1700px;
-    /* ancho máximo para toda la sección */
     margin-left: auto;
-    /* centrar horizontalmente */
     margin-right: auto;
-    /* centrar horizontalmente */
     padding: 0 20px;
-    /* espacio a los lados */
 }
 
 .genre-section h2 {
@@ -271,8 +253,6 @@ label {
     overflow-x: auto;
     padding: 10px 0;
     justify-content: center;
-    /* centrado horizontal */
-    /* otras propiedades */
 }
 
 .genre-results .card {
@@ -286,17 +266,14 @@ label {
     align-items: center;
     gap: 10px;
     justify-content: center;
-    /* Centra el contenido horizontalmente */
 }
 
 .genre-results::-webkit-scrollbar {
     display: none;
-    /* Chrome, Safari, Opera */
 }
 
 .card {
     width: 160px;
-    /* o el tamaño que quieras */
     cursor: pointer;
     border-radius: 8px;
     overflow: hidden;
@@ -319,7 +296,6 @@ label {
 .year,
 .release-date {
     margin-top: 20px;
-    /* o el espacio que prefieras */
 }
 
 .card .title {

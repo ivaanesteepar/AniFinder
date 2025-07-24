@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from db_config import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
@@ -6,6 +6,13 @@ import os
 
 app = Flask(__name__)
 CORS(app)
+
+root_dir = os.path.abspath(os.path.dirname(__file__))  # carpeta backend o donde esté app.py
+
+@app.route("/")
+def home():
+    pages_dir = os.path.join(root_dir, "pages")
+    return send_from_directory(pages_dir, "home.html")
 
 @app.route("/register", methods=["POST"])
 def register():

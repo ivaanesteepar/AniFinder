@@ -19,7 +19,7 @@ const genreSections = document.getElementById('genreSections');
 
 const baseURL = window.location.hostname === "localhost" 
   ? "http://localhost:5000" 
-  : "https://web-production-90c0.up.railway.app";
+  : "https://web-production-62dc.up.railway.app";
 
 let timeoutId = null;
 

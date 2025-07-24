@@ -349,20 +349,63 @@ window.addEventListener('click', (event) => {
     }
 });
 
-registerForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const username = registerForm.regUsername.value.trim();
-    const password = registerForm.regPassword.value.trim();
-    const passwordRepeat = registerForm.regPasswordRepeat.value.trim();
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-    if (password !== passwordRepeat) {
-        alert('Las contraseñas no coinciden');
-        return;
-    }
+  const email = loginForm.email.value.trim();
+  const password = loginForm.password.value.trim();
 
-    alert(`Registro completado para ${username}`);
-    registerModal.style.display = 'none';
-    registerForm.reset();
+  const response = await fetch("http://localhost:5000/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ email, password })
+  });
+
+  const result = await response.json();
+
+  if (result.success) {
+    alert("Inicio de sesión exitoso");
+    document.getElementById("loginModal").style.display = "none";
+  } else {
+    alert(result.message);
+  }
+});
+
+
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const username = registerForm.regUsername.value.trim();
+  const email = registerForm.regEmail.value.trim();
+  const password = registerForm.regPassword.value.trim();
+  const repeatPassword = registerForm.regPasswordRepeat.value.trim();
+  const birthday = registerForm.regBirthdate.value.trim();
+
+  if (password !== repeatPassword) {
+    alert("Las contraseñas no coinciden");
+    return;
+  }
+
+  console.log({ username, email, password, birthday });
+
+  const response = await fetch("http://localhost:5000/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ username, email, password, birthday })
+  });
+
+  const result = await response.json();
+
+  if (result.success) {
+    alert("Registro exitoso");
+    document.getElementById("registerModal").style.display = "none";
+  } else {
+    alert(result.message);
+  }
 });
 
 mostrarUltimosLanzamientos(); // Mostrar últimos lanzamientos al cargar la página

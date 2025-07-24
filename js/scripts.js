@@ -24,13 +24,13 @@ function generarSlug(titulo) {
     return titulo
         .toLowerCase()
         .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // elimina acentos
-        .replace(/[^a-z0-9\s-]/g, "")                    // elimina caracteres no alfanuméricos
+        .replace(/[^a-z0-9\s-]/g, "")  // elimina caracteres no alfanuméricos
         .trim()
-        .replace(/\s+/g, "-");                           // reemplaza espacios por guiones
+        .replace(/\s+/g, "-");  // reemplaza espacios por guiones
 }
 
 
-async function mostrarPorGenero() {
+async function mostrarGeneros() {
     const genreSections = document.getElementById('genreSections');
     genreSections.innerHTML = ''; // Limpia antes de cargar
     
@@ -108,7 +108,7 @@ async function mostrarPorGenero() {
 
 
 async function mostrarUltimosLanzamientos() {
-    results.innerHTML = ''; // Limpiar resultados
+    results.innerHTML = '';
     latestReleases.innerHTML = '';
 
     const section = document.createElement('section');
@@ -194,7 +194,7 @@ input.addEventListener('input', () => {
         console.log('Mostrando recomendados y géneros');
 
         mostrarUltimosLanzamientos();
-        mostrarPorGenero();
+        mostrarGeneros();
 
         return;
     }
@@ -208,10 +208,6 @@ input.addEventListener('input', () => {
         buscarAnime(query);
     }, 500);
 });
-
-
-mostrarUltimosLanzamientos();
-mostrarPorGenero();
 
 
 async function buscarAnime(query) {
@@ -367,4 +363,7 @@ registerForm.addEventListener('submit', (e) => {
     registerModal.style.display = 'none';
     registerForm.reset();
 });
+
+mostrarUltimosLanzamientos(); // Mostrar últimos lanzamientos al cargar la página
+mostrarGeneros(); // Mostrar géneros al cargar la página
 

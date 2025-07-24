@@ -267,7 +267,8 @@ label {
     gap: 10px;
     overflow-x: auto;
     padding: 10px 0;
-    justify-content: center; /* centrado horizontal */
+    justify-content: center;
+    /* centrado horizontal */
     /* otras propiedades */
 }
 

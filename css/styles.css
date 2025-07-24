@@ -64,27 +64,21 @@ header {
     color: #f06292;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
 #searchInput {
     display: block;
-    width: 400px;
+    width: 600px;
     max-width: 100%;
     margin: 0 auto 25px;
     padding: 12px 18px;
     font-size: 1.1rem;
     border-radius: 30px;
     border: 2px solid #f06292;
-    /* borde rosado visible */
     background-color: #fff;
-    /* fondo claro */
     color: #333;
     box-shadow: 0 2px 5px rgba(240, 98, 146, 0.3);
     transition: box-shadow 0.3s ease, border-color 0.3s ease;
     outline-offset: 4px;
+    margin-top: 30px;
 }
 
 #searchInput::placeholder {
@@ -99,42 +93,29 @@ h1 {
     outline: none;
 }
 
-
 #results {
-    max-width: 1200px;
+    max-width: 1500px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 20px;
 }
 
-.card {
-    background: #222;
-    border-radius: 8px;
-    padding: 10px;
-    cursor: pointer;
-    text-align: center;
-    transition: background 0.3s ease;
-}
-
-.card:hover {
-    background: #333;
+#results p {
+    white-space: nowrap;
 }
 
 .card img {
-    width: 100%;
-    border-radius: 5px;
-    height: 225px;
+    width: 150px;
+    height: 210px;
+    /* Alto fijo para todas */
     object-fit: cover;
-    margin-bottom: 10px;
-}
-
-.card .title {
-    font-weight: bold;
-    font-size: 1rem;
+    display: block;
+    padding-bottom: 20px;
 }
 
 #loading {
+    display: none;
     text-align: center;
     margin-top: 10px;
     color: #ccc;
@@ -148,8 +129,9 @@ h1 {
     padding-bottom: 10px;
 }
 
-.title {
-    margin-bottom: 8px;
+.year {
+    font-size: 0.9rem;
+    color: #fff;
 }
 
 .release-date {
@@ -177,6 +159,7 @@ h1 {
     display: none;
 }
 
+
 .modal-content {
     background-color: #121212;
     /* fondo oscuro */
@@ -187,15 +170,12 @@ h1 {
     width: 500px;
     /* ancho aumentado (antes 320px) */
     min-height: 300px;
-    /* altura mínima para que sea más alto */
-    box-shadow: 0 0 15px 3px #ff69b4;
     /* sombra rosada */
     border: 2px solid #ff69b4;
     /* borde rosado */
     color: #fff;
     /* texto blanco */
     font-family: Arial, sans-serif;
-
     /* Para centrar verticalmente usando flexbox */
     position: relative;
     top: 50%;
@@ -218,7 +198,8 @@ h1 {
 
 input[type="text"],
 input[type="password"],
-input[type="email"] {
+input[type="email"],
+input[type="date"] {
     width: 100%;
     padding: 8px;
     margin-top: 4px;
@@ -231,10 +212,10 @@ input[type="email"] {
 
 input[type="text"]::placeholder,
 input[type="password"]::placeholder,
-input[type="email"]::placeholder {
+input[type="email"]::placeholder,
+input[type="date"]::placeholder {
     color: #bbb;
 }
-
 
 button {
     background-color: #ff69b4;
@@ -258,6 +239,96 @@ button:hover {
 label {
     font-weight: 600;
 }
+
+.genre-section {
+    margin-top: 40px;
+    margin-bottom: 40px;
+
+    max-width: 1700px;
+    /* ancho máximo para toda la sección */
+    margin-left: auto;
+    /* centrar horizontalmente */
+    margin-right: auto;
+    /* centrar horizontalmente */
+    padding: 0 20px;
+    /* espacio a los lados */
+}
+
+.genre-section h2 {
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: #ff69b4;
+    text-align: left;
+    padding-left: 30px;
+}
+
+.genre-results {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 10px 0;
+    justify-content: center; /* centrado horizontal */
+    /* otras propiedades */
+}
+
+.genre-results .card {
+    width: 150px;
+    text-align: center;
+}
+
+.carousel-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    /* Centra el contenido horizontalmente */
+}
+
+.genre-results::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera */
+}
+
+.card {
+    flex: 0 0 auto;
+    /* No crecer ni encoger, tamaño fijo */
+    width: 150px;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    background-color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 15px;
+}
+
+.card:hover {
+    background: #333;
+    transform: scale(1.05);
+}
+
+.year,
+.release-date {
+    margin-top: 20px;
+    /* o el espacio que prefieras */
+}
+
+.card .title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    /* Limitar a 2 líneas */
+    overflow: hidden;
+    padding: 0 8px;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+
+
 
 
 @media (max-width: 600px) {

@@ -29,12 +29,11 @@
     <main>
         <input type="search" id="searchInput" placeholder="Busca un anime..." autocomplete="off" />
 
-        <div id="loading" style="display:none;">Buscando...</div>
-
-        <div id="recommendedTitle" style="display:none;">Últimos lanzamientos</div>
+        <div id="loading">Buscando...</div>
         <div id="results"></div>
+        <div id="genreSections"></div>
 
-        <!-- Modal login (oculto por defecto) -->
+        <!-- Modal login -->
         <div id="loginModal" class="modal">
             <div class="modal-content">
                 <span id="closeModal" style="cursor:pointer; float:right; font-size: 20px;">&times;</span>
@@ -59,7 +58,7 @@
             </div>
         </div>
 
-        <!-- Modal registro (oculto por defecto) -->
+        <!-- Modal registro -->
         <div id="registerModal" class="modal">
             <div class="modal-content">
                 <span id="closeRegisterModal" style="cursor:pointer; float:right; font-size: 20px;">&times;</span>
@@ -67,22 +66,25 @@
                 <form id="registerForm">
                     <label for="regUsername">Usuario:</label><br>
                     <input type="text" id="regUsername" name="regUsername" required><br><br>
-
+        
                     <label for="regEmail">Correo electrónico:</label><br>
                     <input type="email" id="regEmail" name="regEmail" required><br><br>
-
+        
                     <label for="regPassword">Contraseña:</label><br>
                     <input type="password" id="regPassword" name="regPassword" required><br><br>
-
+        
                     <label for="regPasswordRepeat">Repite contraseña:</label><br>
                     <input type="password" id="regPasswordRepeat" name="regPasswordRepeat" required><br><br>
-
+        
+                    <label for="regBirthdate">Fecha de nacimiento:</label><br>
+                    <input type="date" id="regBirthdate" name="regBirthdate" required><br><br>
+        
                     <div class="button-container">
                         <button type="submit">Registrar</button>
                     </div>
                 </form>
             </div>
-        </div>
+        </div>        
 
     </main>
 

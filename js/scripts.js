@@ -1,7 +1,18 @@
 const input = document.getElementById('searchInput');
 const results = document.getElementById('results');
 const loading = document.getElementById('loading');
-const recommendedTitle = document.getElementById('recommendedTitle');
+
+const perfilLink = document.getElementById('perfilLink');
+const loginModal = document.getElementById('loginModal');
+const closeModal = document.getElementById('closeModal');
+const loginForm = document.getElementById('loginForm');
+
+const registerLink = document.getElementById('registerLink');
+const registerModal = document.getElementById('registerModal');
+const closeRegisterModal = document.getElementById('closeRegisterModal');
+const registerForm = document.getElementById('registerForm');
+
+const generos = ['Action', 'Romance', 'Comedy', 'Horror', 'Fantasy'];
 
 let timeoutId = null;
 
@@ -15,29 +26,161 @@ function generarSlug(titulo) {
         .replace(/\s+/g, "-");                           // reemplaza espacios por guiones
 }
 
-async function showRecommended() {
-    recommendedTitle.style.display = "block";
-    loading.style.display = 'block';
-    results.innerHTML = '';
+async function mostrarPorGenero() {
+    const genreSections = document.getElementById('genreSections');
+    genreSections.innerHTML = '';
 
-    const queryGraphQL = `
+    // 1. Cargar Últimos lanzamientos
+    const queryRecientes = `
         query {
-            Page(perPage: 24) {
+            Page(perPage: 10) {
                 media(type: ANIME, sort: START_DATE_DESC) {
                     id
-                    type
                     title {
-                        native
                         romaji
                         english
                     }
                     coverImage {
                         large
                     }
+                    siteUrl
                     startDate {
                         year
-                        month
-                        day
+                    }
+                }
+            }
+        }
+    `;
+
+    try {
+        const response = await fetch('https://graphql.anilist.co', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ query: queryRecientes })
+        });
+
+        const data = await response.json();
+        const animeList = data.data.Page.media;
+
+        if (animeList.length > 0) {
+            const section = document.createElement('section');
+            section.className = 'genre-section';
+            section.innerHTML = `<h2>Últimos lanzamientos</h2>`;
+
+            // Contenedor simple sin carrusel
+            const container = document.createElement('div');
+            container.className = 'genre-results';
+
+            animeList.forEach(anime => {
+                const title = anime.title.english || anime.title.romaji;
+                const year = anime.startDate?.year || 'N/A';
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${anime.coverImage.large}" alt="${title}">
+                    <div class="title">${title}</div>
+                    <div class="year">${year !== 'N/A' ? year : 'N/A'}</div>
+                    `;
+                card.addEventListener('click', () => {
+                    window.open(anime.siteUrl, '_blank');
+                });
+                container.appendChild(card);
+            });
+
+            section.appendChild(container);
+            genreSections.appendChild(section);
+        }
+
+    } catch (error) {
+        console.error("Error al cargar últimos lanzamientos:", error);
+    }
+
+    // 2. Cargar animes por cada género
+    for (const genero of generos) {
+        const queryGraphQL = `
+            query ($genre: String) {
+                Page(perPage: 10) {
+                    media(type: ANIME, genre: $genre, sort: POPULARITY_DESC) {
+                        id
+                        title {
+                            romaji
+                            english
+                        }
+                        coverImage {
+                            large
+                        }
+                        siteUrl
+                        startDate {
+                            year
+                        }
+                    }
+                }
+            }
+        `;
+
+        try {
+            const response = await fetch('https://graphql.anilist.co', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    query: queryGraphQL,
+                    variables: { genre: genero }
+                })
+            });
+
+            const data = await response.json();
+            const animeList = data.data.Page.media;
+
+            if (animeList.length > 0) {
+                const section = document.createElement('section');
+                section.className = 'genre-section';
+                section.innerHTML = `<h2>${genero}</h2>`;
+
+                // Contenedor simple sin carrusel
+                const container = document.createElement('div');
+                container.className = 'genre-results';
+
+                animeList.forEach(anime => {
+                    const title = anime.title.english || anime.title.romaji;
+                    const year = anime.startDate?.year || 'N/A';
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <img src="${anime.coverImage.large}" alt="${title}">
+                        <div class="title">${title}</div>
+                        <div class="year">${year !== 'N/A' ? year : 'N/A'}</div>
+                    `;
+                    card.addEventListener('click', () => {
+                        window.open(anime.siteUrl, '_blank');
+                    });
+                    container.appendChild(card);
+                });
+
+                section.appendChild(container);
+                genreSections.appendChild(section);
+            }
+
+        } catch (error) {
+            console.error(`Error al cargar ${genero}:`, error);
+        }
+    }
+}
+
+async function showRecommended() {
+    const query = `
+        query {
+            Page(perPage: 10) {
+                media(type: ANIME, sort: START_DATE_DESC) {
+                    id
+                    title {
+                        romaji
+                        english
+                    }
+                    coverImage {
+                        large
                     }
                     siteUrl
                 }
@@ -48,47 +191,32 @@ async function showRecommended() {
     try {
         const response = await fetch('https://graphql.anilist.co', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({ query: queryGraphQL }),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ query })
         });
 
         const data = await response.json();
+        const animes = data.data.Page.media;
 
-        if (data.errors) {
-            console.error('Error en la respuesta GraphQL:', data.errors);
-            alert('Error GraphQL: ' + JSON.stringify(data.errors));
-            results.innerHTML = '<p>Error al cargar recomendados.</p>';
-            loading.style.display = 'none';
-            return;
-        }
-
-        const animeList = data.data.Page.media.filter(item => item.type === "ANIME");
-
-        if (animeList.length === 0) {
-            results.innerHTML = '<p>No se encontraron animes recomendados.</p>';
-            loading.style.display = 'none';
-            return;
-        }
-
-        animeList.forEach(anime => {
-            const title = anime.title.romaji || anime.title.english;
-
+        animes.forEach(anime => {
+            const title = anime.title.english || anime.title.romaji;
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
-                <img src="${anime.coverImage.large}" alt="Portada de ${title}" />
+                <img src="${anime.coverImage.large}" alt="${title}">
                 <div class="title">${title}</div>
             `;
             card.addEventListener('click', () => {
                 window.open(anime.siteUrl, '_blank');
-            });            
-            results.appendChild(card);
+            });
+            carouselContainer.appendChild(card);
         });
+
     } catch (error) {
-        console.error('Error de red o excepción:', error);
-        results.innerHTML = '<p>Error de red o servidor.</p>';
-    } finally {
-        loading.style.display = 'none';
+        console.error("Error al cargar últimos lanzamientos:", error);
     }
 }
 
@@ -96,15 +224,25 @@ input.addEventListener('input', () => {
     clearTimeout(timeoutId);
     const query = input.value.trim();
 
-    if (query.length < 2) {
-        showRecommended();
-        recommendedTitle.style.display = "block";
+    if (query.length == 0 || query.length < 2) {
+        document.getElementById('carouselContainer').style.display = 'flex';
+        document.getElementById('genreSections').style.display = 'block';
+
         loading.style.display = 'none';
+        results.innerHTML = '';
+
+        results.style.display = 'none';
+
+        console.log('Mostrando recomendados y géneros');
+
+        showRecommended();
+        mostrarPorGenero();
         return;
     }
 
-    recommendedTitle.style.display = "none";
-    loading.style.display = 'block';
+    document.getElementById('genreSections').style.display = 'none';
+
+    loading.style.display = 'none';
 
     timeoutId = setTimeout(() => {
         buscarAnime(query);
@@ -112,6 +250,7 @@ input.addEventListener('input', () => {
 });
 
 showRecommended();
+mostrarPorGenero();
 
 async function buscarAnime(query) {
     const queryGraphQL = `
@@ -130,14 +269,14 @@ async function buscarAnime(query) {
                     }
                     startDate {
                         year
-                        month
-                        day
                     }
                     siteUrl
                 }
             }
         }
     `;
+
+    console.log('Buscando anime:', query);
 
     try {
         const response = await fetch('https://graphql.anilist.co', {
@@ -166,16 +305,17 @@ async function buscarAnime(query) {
         results.innerHTML = '';
         animeList.forEach(anime => {
             const title = anime.title.english || anime.title.romaji;
-
+            const year = anime.startDate?.year || 'N/A';
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
                 <img src="${anime.coverImage.large}" alt="Portada de ${title}" />
                 <div class="title">${title}</div>
+                <div class="year">${year !== 'N/A' ? year : 'N/A'}</div>
             `;
             card.addEventListener('click', () => {
                 window.open(anime.siteUrl, '_blank');
-            });            
+            });
             results.appendChild(card);
         });
 
@@ -187,21 +327,7 @@ async function buscarAnime(query) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const menuToggle = document.getElementById('menuToggle');
-    const mobileMenu = document.getElementById('mobileMenu');
-
-    menuToggle.addEventListener('click', () => {
-        mobileMenu.classList.toggle('active');
-    });
-});
-
-const perfilLink = document.getElementById('perfilLink');
-const loginModal = document.getElementById('loginModal');
-const closeModal = document.getElementById('closeModal');
-const loginForm = document.getElementById('loginForm');
-
-// Mostrar modal login al clicar en Perfil si no está logueado
+// --- Código modal login ---
 perfilLink.addEventListener('click', (e) => {
     const loggedIn = localStorage.getItem('loggedIn');
     if (loggedIn) {
@@ -248,11 +374,6 @@ loginForm.addEventListener('submit', (e) => {
 });
 
 // --- Código modal registro ---
-const registerLink = document.getElementById('registerLink');
-const registerModal = document.getElementById('registerModal');
-const closeRegisterModal = document.getElementById('closeRegisterModal');
-const registerForm = document.getElementById('registerForm');
-
 registerLink.addEventListener('click', (e) => {
     e.preventDefault();
     loginModal.style.display = 'none';
@@ -284,3 +405,4 @@ registerForm.addEventListener('submit', (e) => {
     registerModal.style.display = 'none';
     registerForm.reset();
 });
+

@@ -1,34 +1,10 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from db_config import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
-import os
 
 app = Flask(__name__)
 CORS(app)
-
-root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-
-@app.route("/")
-def home():
-    pages_dir = os.path.join(root_dir, "pages")
-    return send_from_directory(pages_dir, "home.html")
-
-# Rutas para servir archivos estáticos
-@app.route("/css/<path:path>")
-def send_css(path):
-    css_dir = os.path.join(root_dir, "css")
-    return send_from_directory(css_dir, path)
-
-@app.route("/js/<path:path>")
-def send_js(path):
-    js_dir = os.path.join(root_dir, "js")
-    return send_from_directory(js_dir, path)
-
-@app.route("/img/<path:path>")
-def send_img(path):
-    img_dir = os.path.join(root_dir, "img")
-    return send_from_directory(img_dir, path)
 
 @app.route("/register", methods=["POST"])
 def register():
@@ -91,5 +67,4 @@ def login():
         return jsonify({"success": False, "message": "Credenciales incorrectas"}), 401
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(debug=True)

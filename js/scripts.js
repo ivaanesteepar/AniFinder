@@ -335,7 +335,7 @@ loginForm.addEventListener("submit", async (e) => {
   const email = loginForm.email.value.trim();
   const password = loginForm.password.value.trim();
 
-  const response = await fetch("https://web-production-62dc.up.railway.app/login", {
+  const response = await fetch("http://localhost:5000/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -370,7 +370,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
 
   console.log({ username, email, password, birthday });
 
-  const response = await fetch("https://web-production-62dc.up.railway.app/register", {
+  const response = await fetch("http://localhost:5000/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

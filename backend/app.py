@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-root_dir = os.path.abspath(os.path.dirname(__file__))  # carpeta backend o donde esté app.py
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 @app.route("/")
 def home():

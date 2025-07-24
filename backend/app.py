@@ -9,6 +9,11 @@ CORS(app)
 
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
+@app.route("/")
+def root():
+    pages_dir = os.path.join(root_dir, "pages")
+    return send_from_directory(pages_dir, "home.html")
+
 @app.route('/pages/<path:path>')
 def send_pages(path):
     return send_from_directory(os.path.join(root_dir, 'pages'), path)

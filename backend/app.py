@@ -13,6 +13,21 @@ CORS(app)
 def index():
     return send_from_directory(root_dir, "index.html")
 
+@app.route("/pages/<path:filename>")
+def serve_pages(filename):
+    return send_from_directory(os.path.join(root_dir, "pages"), filename)
+
+@app.route("/js/<path:filename>")
+def serve_js(filename):
+    return send_from_directory(os.path.join(root_dir, "js"), filename)
+
+@app.route("/css/<path:filename>")
+def serve_css(filename):
+    return send_from_directory(os.path.join(root_dir, "css"), filename)
+
+@app.route("/img/<path:filename>")
+def serve_img(filename):
+    return send_from_directory(os.path.join(root_dir, "img"), filename)
 
 @app.route("/register", methods=["POST"])
 def register():

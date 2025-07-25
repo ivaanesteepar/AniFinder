@@ -461,4 +461,23 @@ label {
     transform: none !important;
     padding-left: 10px;
   }
+
+  .anime-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    gap: 10px;
+    max-width: 100vw;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .anime-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .anime-grid .card {
+    flex: 0 0 auto !important;
+    width: 130px !important;
+    min-width: 130px !important;
+  }
 }

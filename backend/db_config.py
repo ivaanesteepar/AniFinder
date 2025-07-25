@@ -1,6 +1,5 @@
 import os
 import mysql.connector
-from dotenv import load_dotenv
 
 # Solo carga el .env si existe
 #base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))

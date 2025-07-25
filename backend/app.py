@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from db_config import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 CORS(app)

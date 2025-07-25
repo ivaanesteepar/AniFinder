@@ -1,11 +1,18 @@
-from flask import Flask, request, jsonify
+import os
+from flask import Flask, request, jsonify, send_from_directory
 from db_config import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
-import os
 
 app = Flask(__name__)
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 CORS(app)
+
+
+@app.route("/")
+def index():
+    return send_from_directory(root_dir, "index.html")
+
 
 @app.route("/register", methods=["POST"])
 def register():

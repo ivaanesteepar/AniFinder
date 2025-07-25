@@ -13,11 +13,11 @@ const registerForm = document.getElementById('registerForm');
 
 // Cambié generos de objeto con IDs a un Map para facilitar iteración y obtener claves/valores
 const generos = new Map([
-    ['Action', 1],
+    ['Acción', 1],
     ['Drama', 8],
-    ['Comedy', 4],
-    ['Horror', 14],
-    ['Fantasy', 10],
+    ['Comedia', 4],
+    ['Terror', 14],
+    ['Fantasía', 10],
 ]);
 
 const results = document.getElementById('results');

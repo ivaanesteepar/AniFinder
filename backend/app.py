@@ -89,7 +89,12 @@ def login():
         conn.close()
 
         if user and check_password_hash(user["password"], password):
-            return jsonify({"success": True, "message": "Login correcto"})
+            return jsonify({
+                "success": True,
+                "message": "Login correcto",
+                "username": user["username"],
+                "birthday": user["birthday"]
+            })
         else:
             return jsonify({"success": False, "message": "Credenciales incorrectas"}), 401
 

@@ -27,21 +27,44 @@
 
     <main>
         <h1 id="saludo">Hola</h1>
+        <p id="edadMensaje"></p>
     </main>
-
 
     <script src="../js/scripts.js"></script>
 
     <script>
+        // Función para calcular si tiene 18 años o más a partir de birthday (formato ISO)
+        function tiene18anos(birthday) {
+            if (!birthday) return false;
+
+            const fechaNacimiento = new Date(birthday);
+            const hoy = new Date();
+
+            let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+            const mesDiff = hoy.getMonth() - fechaNacimiento.getMonth();
+            const diaDiff = hoy.getDate() - fechaNacimiento.getDate();
+
+            if (mesDiff < 0 || (mesDiff === 0 && diaDiff < 0)) {
+                edad--;
+            }
+
+            return edad >= 18;
+        }
+
         // Mostrar saludo personalizado si hay nombre guardado
         const username = localStorage.getItem('username');
+        const birthday = localStorage.getItem('birthday');
         const saludo = document.getElementById('saludo');
+        const edadMensaje = document.getElementById('edadMensaje');
 
         if (username && saludo) {
             saludo.textContent = `Hola, ${username}`;
-        } else {
-            // Opcional: redirigir si no hay sesión iniciada
-            window.location.href = '../pages/home.html';
+
+            if (tiene18anos(birthday)) {
+                edadMensaje.textContent = "Eres mayor de 18 años, puedes acceder a todo el contenido.";
+            } else {
+                edadMensaje.textContent = "Eres menor de 18 años, el contenido para adultos estará oculto.";
+            }
         }
 
         // Manejo del cierre de sesión
@@ -50,6 +73,7 @@
             e.preventDefault();
             localStorage.removeItem('loggedIn');
             localStorage.removeItem('username');
+            localStorage.removeItem('birthday');
             window.location.href = '../pages/home.html';
         });
     </script>

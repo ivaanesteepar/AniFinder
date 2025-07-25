@@ -273,6 +273,7 @@ loginForm.addEventListener("submit", async (e) => {
     const result = await response.json();
 
     if (result.success) {
+        console.log("El usuario ha iniciado sesión correctamente:", result);
         alert("Inicio de sesión exitoso");
         loginModal.style.display = "none";
         localStorage.setItem('loggedIn', 'true');
@@ -281,6 +282,10 @@ loginForm.addEventListener("submit", async (e) => {
         if (result.username) {
             localStorage.setItem('username', result.username);
         }
+
+        if (result.birthday) {
+            localStorage.setItem('birthday', result.birthday);
+        }
     
         window.location.href = "../pages/perfil.html";
     } else {
@@ -288,6 +293,26 @@ loginForm.addEventListener("submit", async (e) => {
     }
     
 });
+
+
+function tiene18anos(birthday) {
+    if (!birthday) return false;
+
+    const fechaNacimiento = new Date(birthday);
+    const hoy = new Date();
+
+    let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+    const mesDiff = hoy.getMonth() - fechaNacimiento.getMonth();
+    const diaDiff = hoy.getDate() - fechaNacimiento.getDate();
+
+    // Ajustar edad si no ha cumplido años este año
+    if (mesDiff < 0 || (mesDiff === 0 && diaDiff < 0)) {
+        edad--;
+    }
+
+    return edad >= 18;
+}
+
 
 registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();

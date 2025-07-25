@@ -25,19 +25,31 @@
         </nav>
     </header>
 
+    <main>
+        <h1 id="saludo">Hola</h1>
+    </main>
+
+
     <script src="../js/scripts.js"></script>
 
     <script>
-        const logoutLink = document.getElementById('logoutLink');
+        // Mostrar saludo personalizado si hay nombre guardado
+        const username = localStorage.getItem('username');
+        const saludo = document.getElementById('saludo');
 
+        if (username && saludo) {
+            saludo.textContent = `Hola, ${username}`;
+        } else {
+            // Opcional: redirigir si no hay sesión iniciada
+            window.location.href = '../pages/home.html';
+        }
+
+        // Manejo del cierre de sesión
+        const logoutLink = document.getElementById('logoutLink');
         logoutLink.addEventListener('click', (e) => {
             e.preventDefault();
-
-            // Borramos usuario guardado
             localStorage.removeItem('loggedIn');
             localStorage.removeItem('username');
-
-            // Redirigimos a home
             window.location.href = '../pages/home.html';
         });
     </script>

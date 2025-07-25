@@ -297,7 +297,7 @@ label {
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   justify-content: flex-start;
-  
+
   /* Ocultar scrollbar en Firefox */
   scrollbar-width: none;
   /* Ocultar scrollbar en IE, Edge y Chrome */
@@ -305,7 +305,8 @@ label {
 }
 
 .anime-grid::-webkit-scrollbar {
-  display: none; /* Chrome, Safari y Opera */
+  display: none;
+  /* Chrome, Safari y Opera */
 }
 
 .year,
@@ -332,6 +333,10 @@ label {
     /* altura mínima para que el fondo sea más largo */
     padding: 1rem 1rem 1.5rem 1rem;
     /* más padding abajo para espacio */
+  }
+
+  .card:hover {
+    transform: none !important;
   }
 
   body {
@@ -479,5 +484,9 @@ label {
     flex: 0 0 auto !important;
     width: 130px !important;
     min-width: 130px !important;
+  }
+
+  .card:hover {
+    transform: none !important;
   }
 }

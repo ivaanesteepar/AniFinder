@@ -276,9 +276,17 @@ loginForm.addEventListener("submit", async (e) => {
         alert("Inicio de sesión exitoso");
         loginModal.style.display = "none";
         localStorage.setItem('loggedIn', 'true');
+        
+        // Guardar el nombre de usuario si está presente
+        if (result.username) {
+            localStorage.setItem('username', result.username);
+        }
+    
+        window.location.href = "../pages/perfil.html";
     } else {
         alert(result.message);
     }
+    
 });
 
 registerForm.addEventListener("submit", async (e) => {

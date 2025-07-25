@@ -73,21 +73,30 @@ def register():
 
 @app.route("/login", methods=["POST"])
 def login():
-    data = request.json
-    email = data.get("email")
-    password = data.get("password")
+    try:
+        data = request.json
+        email = data.get("email")
+        password = data.get("password")
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
-    user = cursor.fetchone()
-    cursor.close()
-    conn.close()
+        if not email or not password:
+            return jsonify({"success": False, "message": "Faltan campos obligatorios"}), 400
 
-    if user and check_password_hash(user["password"], password):
-        return jsonify({"success": True, "message": "Login correcto"})
-    else:
-        return jsonify({"success": False, "message": "Credenciales incorrectas"}), 401
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if user and check_password_hash(user["password"], password):
+            return jsonify({"success": True, "message": "Login correcto"})
+        else:
+            return jsonify({"success": False, "message": "Credenciales incorrectas"}), 401
+
+    except Exception as e:
+        app.logger.error(f"Error en /login: {e}")
+        return jsonify({"success": False, "message": "Error interno del servidor"}), 500
+
 
 
 if __name__ == "__main__":

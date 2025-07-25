@@ -289,6 +289,25 @@ label {
   transform: scale(1.05);
 }
 
+.anime-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  justify-content: flex-start;
+  
+  /* Ocultar scrollbar en Firefox */
+  scrollbar-width: none;
+  /* Ocultar scrollbar en IE, Edge y Chrome */
+  -ms-overflow-style: none;
+}
+
+.anime-grid::-webkit-scrollbar {
+  display: none; /* Chrome, Safari y Opera */
+}
+
 .year,
 .release-date {
   margin-top: 20px;
@@ -363,8 +382,10 @@ label {
   }
 
   .genre-section h2 {
-    text-align: left !important; /* título alineado a la izquierda */
-    padding-left: 10px !important; /* un poco de margen a la izquierda */
+    text-align: left !important;
+    /* título alineado a la izquierda */
+    padding-left: 10px !important;
+    /* un poco de margen a la izquierda */
   }
 
   .genre-results {
@@ -372,15 +393,18 @@ label {
     justify-content: flex-start !important;
     padding-left: 10px !important;
     overflow-x: auto !important;
-    max-width: 100% !important; /* Asegura que ocupe todo el ancho */
-    margin-left: 0 !important; /* Sin márgenes laterales */
+    max-width: 100% !important;
+    /* Asegura que ocupe todo el ancho */
+    margin-left: 0 !important;
+    /* Sin márgenes laterales */
     margin-right: 0 !important;
   }
 
   .genre-section {
     padding-left: 10px !important;
     padding-right: 10px !important;
-    max-width: 100% !important; /* para que no limite el ancho */
+    max-width: 100% !important;
+    /* para que no limite el ancho */
     margin-left: 0 !important;
     margin-right: 0 !important;
   }

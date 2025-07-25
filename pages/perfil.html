@@ -65,6 +65,9 @@
             } else {
                 edadMensaje.textContent = "Eres menor de 18 años, el contenido para adultos estará oculto.";
             }
+        } else {
+            // Opcional: redirigir si no hay sesión iniciada
+            window.location.href = '../pages/home.html';
         }
 
         // Manejo del cierre de sesión

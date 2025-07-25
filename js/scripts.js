@@ -11,9 +11,9 @@ const registerModal = document.getElementById('registerModal');
 const closeRegisterModal = document.getElementById('closeRegisterModal');
 const registerForm = document.getElementById('registerForm');
 
+const birthday = localStorage.getItem('birthday');
+const esMayor = tiene18anos(birthday);
 
-
-// Cambié generos de objeto con IDs a un Map para facilitar iteración y obtener claves/valores
 const generos = new Map([
     ['Action', 1],
     ['Drama', 8],
@@ -74,6 +74,11 @@ async function mostrarGeneros() {
 
 
 function crearSeccionGenero(genero, animes, contenedor) {
+    const birthday = localStorage.getItem('birthday');
+    const esMayor = tiene18anos(birthday);
+
+    const animesFiltrados = esMayor ? animes : animes.filter(a => a.rating !== 'R18');
+
     const section = document.createElement('section');
     section.className = 'genre-section';
 
@@ -84,7 +89,7 @@ function crearSeccionGenero(genero, animes, contenedor) {
     const grid = document.createElement('div');
     grid.className = 'anime-grid';
 
-    animes.forEach(anime => {
+    animesFiltrados.forEach(anime => {
         const title = anime.title_english || anime.title || anime.title_japanese || 'Sin título';
         const year = anime.aired?.from ? new Date(anime.aired.from).getFullYear() : 'N/A';
         const imageUrl = anime.images?.jpg?.image_url || '';
@@ -103,12 +108,11 @@ function crearSeccionGenero(genero, animes, contenedor) {
 
         grid.appendChild(card);
     });
-    console.log(`Mostrando género: ${genero}, cantidad: ${animes.length}`);
-
 
     section.appendChild(grid);
     contenedor.appendChild(section);
 }
+
 
 
 async function mostrarUltimosLanzamientos() {
@@ -186,6 +190,9 @@ input.addEventListener('input', async () => {
 
 async function buscarAnime(query) {
     try {
+        const birthday = localStorage.getItem('birthday');
+        const esMayor = tiene18anos(birthday);
+
         const response = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=12`);
         const data = await response.json();
 
@@ -195,8 +202,10 @@ async function buscarAnime(query) {
             return;
         }
 
+        const animesFiltrados = esMayor ? data.data : data.data.filter(a => a.rating !== 'R18');
+
         results.innerHTML = '';
-        data.data.forEach(anime => {
+        animesFiltrados.forEach(anime => {
             const title = anime.title_english || anime.title || anime.title_japanese || 'Sin título';
             const year = anime.aired?.from ? new Date(anime.aired.from).getFullYear() : 'N/A';
             const card = document.createElement('div');
@@ -219,6 +228,7 @@ async function buscarAnime(query) {
         loading.style.display = 'none';
     }
 }
+
 
 // Código modales login y registro (sin cambios relevantes)
 perfilLink.addEventListener('click', (e) => {

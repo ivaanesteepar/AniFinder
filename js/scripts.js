@@ -11,7 +11,6 @@ const registerModal = document.getElementById('registerModal');
 const closeRegisterModal = document.getElementById('closeRegisterModal');
 const registerForm = document.getElementById('registerForm');
 
-// Cambié generos de objeto con IDs a un Map para facilitar iteración y obtener claves/valores
 const generos = new Map([
     ['Acción', 1],
     ['Drama', 8],
@@ -152,7 +151,6 @@ function eliminarDuplicados(animes) {
 }
 
 
-
 input.addEventListener('input', async () => {
     clearTimeout(timeoutId);
     const query = input.value.trim();
@@ -181,6 +179,7 @@ input.addEventListener('input', async () => {
         buscarAnime(query);
     }, 500);
 });
+
 
 async function buscarAnime(query) {
     try {
@@ -217,6 +216,7 @@ async function buscarAnime(query) {
         loading.style.display = 'none';
     }
 }
+
 
 // Código modales login y registro (sin cambios relevantes)
 perfilLink.addEventListener('click', (e) => {
@@ -345,6 +345,7 @@ registerForm.addEventListener("submit", async (e) => {
         alert(result.message);
     }
 });
+
 
 async function cargarContenidoPrincipal() {
     latestReleases.innerHTML = '';

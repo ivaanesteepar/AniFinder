@@ -328,23 +328,32 @@ registerForm.addEventListener("submit", async (e) => {
         return;
     }
 
-    const response = await fetch("https://web-production-62dc.up.railway.app/register", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username, email, password, birthday })
-    });
+    try {
+        const response = await fetch("https://web-production-62dc.up.railway.app/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, email, password, birthday })
+        });
 
-    const result = await response.json();
+        const result = await response.json();
 
-    if (result.success) {
-        alert("Registro exitoso");
-        registerModal.style.display = "none";
-    } else {
-        alert(result.message);
+        console.log("Respuesta registro:", result);
+
+        if (result.success) {
+            console.log("Registro exitoso, antes del alert");
+            alert("Registro exitoso");
+            registerModal.style.display = "none";
+        } else {
+            alert("Error: " + result.message);
+        }
+    } catch (error) {
+        console.error("Error en fetch de registro:", error);
+        alert("Error en la comunicación con el servidor");
     }
 });
+
 
 
 async function cargarContenidoPrincipal() {

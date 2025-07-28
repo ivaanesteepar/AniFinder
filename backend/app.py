@@ -60,7 +60,7 @@ def register():
         "birthday": birthday
     }).execute()
 
-    if response.status_code in (200, 201):
+    if response.error is None:
         return jsonify({"success": True, "message": "Usuario registrado correctamente"})
     else:
         return jsonify({"success": False, "message": "Error al registrar usuario"}), 500

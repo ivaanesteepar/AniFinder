@@ -15,23 +15,26 @@
         <nav class="navbar">
             <div class="logo">
                 <a href="../pages/home.html">
-                    <img src="../img/logo_app.png" alt="Buscador Anime" height="90px" width="160px" />
+                    <img src="../img/logo_app.png" alt="Buscador Anime" height="80px" width="150px" />
                 </a>
             </div>
             <ul class="nav-links" id="mobileMenu">
-                <li><a href="../pages/categorias.html">Categorías</a></li>
-                <li><a href="../pages/favoritos.html">Favoritos</a></li>
+                <li><a href="../pages/ranking.html">Ranking</a></li>
+                <li id="favoritosLink"><a href="../pages/favoritos.html">Favoritos</a></li>
                 <li><a href="#" id="perfilLink">Perfil</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <input type="search" id="searchInput" placeholder="Busca un anime..." autocomplete="off" />
+        <div class="search-wrapper">
+            <input id="searchInput" type="search" placeholder="Busca un anime..." autocomplete="off" />
+        </div>
 
         <div id="loading">Buscando...</div>
         <div id="results"></div>
         <div id="latestReleases"></div>
+        <div id="upcomingReleases"></div>
         <div id="genreSections"></div>
 
         <!-- Modal login -->
@@ -44,6 +47,7 @@
                     <input type="email" id="email" name="email" required><br><br>
                     <label for="password">Contraseña:</label><br>
                     <input type="password" id="password" name="password" required><br><br>
+                    <div id="loginErrorMessage" style="color: red; text-align: center; margin-bottom: 10px; display: none;"></div>
                     <div class="button-container">
                         <button>Entrar</button>
                     </div>
@@ -66,28 +70,50 @@
                 <h2>Registro</h2>
                 <form id="registerForm">
                     <label for="regUsername">Usuario:</label><br>
-                    <input type="text" id="regUsername" name="regUsername" required><br><br>
+                    <input type="text" id="regUsername" name="regUsername" required><br>
+                    <small class="error-message" id="errorUsername" style="color:red;"></small><br>
 
                     <label for="regEmail">Correo electrónico:</label><br>
-                    <input type="email" id="regEmail" name="regEmail" required><br><br>
+                    <input type="email" id="regEmail" name="regEmail" required><br>
+                    <small class="error-message" id="errorEmail" style="color:red;"></small><br>
 
                     <label for="regPassword">Contraseña:</label><br>
-                    <input type="password" id="regPassword" name="regPassword" required><br><br>
+                    <input type="password" id="regPassword" name="regPassword" required><br>
+                    <small class="error-message" id="errorPassword" style="color:red;"></small><br>
 
                     <label for="regPasswordRepeat">Repite contraseña:</label><br>
-                    <input type="password" id="regPasswordRepeat" name="regPasswordRepeat" required><br><br>
+                    <input type="password" id="regPasswordRepeat" name="regPasswordRepeat" required><br>
+                    <small class="error-message" id="errorPasswordRepeat" style="color:red;"></small><br>
 
                     <label for="regBirthdate">Fecha de nacimiento:</label><br>
-                    <input type="date" id="regBirthdate" name="regBirthdate" required><br><br>
+                    <input type="date" id="regBirthdate" name="regBirthdate" required><br>
+                    <small class="error-message" id="errorBirthdate" style="color:red;"></small><br>
 
                     <div class="button-container">
                         <button type="submit">Registrar</button>
                     </div>
                 </form>
+
             </div>
         </div>
 
     </main>
+    <footer style="background-color:#222; color:#eee; padding: 15px 20px; text-align: center; font-size: 0.9rem;">
+        <p style="margin-bottom: 10px;">© 2025 Iván. Todos los derechos reservados.</p>
+        <div class="footer-links">
+            <p>
+                <a href="https://twitter.com/tu_usuario" target="_blank" rel="noopener" style="margin: 0 8px;">
+                    <img src="../img/twitter.png" style="width: 20px;" alt="Twitter" /> 
+                </a> 
+                <a href="https://linkedin.com/tu_usuario" target="_blank" rel="noopener" style="margin: 0 8px;">
+                    <img src="../img/linkedln.png" style="width: 20px;" alt="LinkedIn" /> 
+                </a> 
+                <a href="https://instagram.com/tu_usuario" target="_blank" rel="noopener" style="margin: 0 8px;">
+                    <img src="../img/instagram.png" style="width: 20px;" alt="Instagram" /> 
+                </a>
+            </p>
+        </div>
+    </footer>
 
     <script src="../js/scripts.js"></script>
 

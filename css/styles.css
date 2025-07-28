@@ -8,9 +8,9 @@ body {
   font-family: Arial, sans-serif;
   background: #121212;
   color: #eee;
-  margin: 0;
-  padding: 20px;
-  padding-top: 100px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -26,6 +26,18 @@ header {
   align-items: center;
 }
 
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  flex: 1;
+  padding: 20px;
+  padding-top: 100px;
+}
+
 .navbar {
   position: relative;
   display: flex;
@@ -39,7 +51,6 @@ header {
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  height: 80px;
   padding-top: 5px;
 }
 
@@ -50,18 +61,34 @@ header {
   gap: 2rem;
   padding-right: 80px;
   align-items: center;
-  height: 80px;
 }
 
 .nav-links li a {
   color: white;
   text-decoration: none;
-  font-weight: 600;
-  font-size: 1.2rem;
+  font-weight: 400;
+  font-size: 1.1rem;
 }
 
 .nav-links li a:hover {
   color: #f06292;
+}
+
+/* Ocultar botón de limpiar en Chrome, Edge, Safari */
+#searchInput::-webkit-clear-button {
+  display: none;
+}
+
+/* También un selector más específico para Chromium */
+#searchInput::-webkit-search-cancel-button {
+  display: none;
+}
+
+/* En IE y Edge Legacy */
+#searchInput::-ms-clear {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 #searchInput {
@@ -69,7 +96,8 @@ header {
   width: 600px;
   max-width: 100%;
   margin: 0 auto 25px;
-  padding: 12px 18px;
+  padding: 12px 45px 12px 18px;
+  margin-top: 10px;
   font-size: 1.1rem;
   border-radius: 30px;
   border: 2px solid #f06292;
@@ -78,7 +106,11 @@ header {
   box-shadow: 0 2px 5px rgba(240, 98, 146, 0.3);
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
   outline-offset: 4px;
-  margin-top: 30px;
+
+  background-image: url("../img/lupa.svg");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 20px 20px;
 }
 
 #searchInput::placeholder {
@@ -93,11 +125,12 @@ header {
 }
 
 #results {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
   max-width: 1500px;
   margin: 0 auto;
+  padding: 0 40px;
 }
 
 #results p {
@@ -225,10 +258,6 @@ button:hover {
   background-color: #ff1493;
 }
 
-label {
-  font-weight: 600;
-}
-
 .genre-section {
   margin-top: 40px;
   margin-bottom: 40px;
@@ -236,38 +265,14 @@ label {
   margin-left: auto;
   margin-right: auto;
   padding: 0 100px;
+  height: 100%;
 }
 
 .genre-section h2 {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   font-size: 24px;
   color: #ff69b4;
   text-align: left;
-}
-
-.genre-results {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding: 10px 0;
-  justify-content: center;
-}
-
-.genre-results .card {
-  width: 150px;
-  text-align: center;
-}
-
-.carousel-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  justify-content: center;
-}
-
-.genre-results::-webkit-scrollbar {
-  display: none;
 }
 
 .card {
@@ -282,6 +287,7 @@ label {
   align-items: center;
   text-align: center;
   padding-bottom: 15px;
+  transition: transform 0.3s ease;
 }
 
 .card:hover {
@@ -295,13 +301,16 @@ label {
   gap: 10px;
   overflow-x: auto;
   overflow-y: hidden;
+  height: 100%;
   -webkit-overflow-scrolling: touch;
   justify-content: flex-start;
-
   /* Ocultar scrollbar en Firefox */
   scrollbar-width: none;
   /* Ocultar scrollbar en IE, Edge y Chrome */
   -ms-overflow-style: none;
+  /* Ocultar scrollbar en Chrome, Safari y Opera */
+  scrollbar-color: transparent transparent;
+  overflow: visible !important;
 }
 
 .anime-grid::-webkit-scrollbar {
@@ -312,6 +321,12 @@ label {
 .year,
 .release-date {
   margin-top: 20px;
+}
+
+.error-message {
+  font-size: 0.9em;
+  margin-bottom: 10px; /* espacio debajo del mensaje de error */
+  display: block; /* para que el margin-bottom funcione bien */
 }
 
 .card .title {
@@ -408,9 +423,7 @@ label {
 
   .genre-section h2 {
     text-align: left !important;
-    /* título alineado a la izquierda */
     padding-left: 10px !important;
-    /* un poco de margen a la izquierda */
   }
 
   .genre-section {

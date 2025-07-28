@@ -13,7 +13,7 @@ const registerForm = document.getElementById('registerForm');
 
 const generos = new Map([
     ['Acción', 1],
-    ['Drama', 8],
+    ['Romance', 22],
     ['Comedia', 4],
     ['Terror', 14],
     ['Fantasía', 10],
@@ -22,6 +22,7 @@ const generos = new Map([
 const results = document.getElementById('results');
 const latestReleases = document.getElementById('latestReleases');
 const genreSections = document.getElementById('genreSections');
+const upcomingReleases = document.getElementById('upcomingReleases');
 
 let timeoutId = null;
 
@@ -35,15 +36,35 @@ function generarSlug(titulo) {
         .replace(/\s+/g, "-");  // reemplaza espacios por guiones
 }
 
+async function mostrarProximosLanzamientos() {
+    upcomingReleases.innerHTML = '';
+
+    try {
+        const hoy = new Date();
+        const hoyISO = hoy.toISOString().split('T')[0]; // YYYY-MM-DD
+
+        const response = await fetch(`https://api.jikan.moe/v4/anime?start_date=${hoyISO}&order_by=start_date&sort=asc&limit=10`);
+        const data = await response.json();
+
+        if (data.data && data.data.length > 0) {
+            // Filtrar duplicados
+            const animesUnicos = eliminarDuplicados(data.data);
+            crearSeccionGenero('Próximos lanzamientos', animesUnicos, upcomingReleases);
+        } else {
+        }
+    } catch (error) {
+        console.error('Error al cargar próximos lanzamientos:', error);
+    }
+}
+
 
 async function mostrarGeneros() {
-    genreSections.innerHTML = ''; // Limpia la sección
-    console.log("Cargando géneros sin usar caché...");
+    genreSections.innerHTML = '';
 
     for (const [genero, genreId] of generos.entries()) {
         try {
             console.log(`Solicitando datos para género: ${genero} (ID: ${genreId})`);
-            const response = await fetch(`https://api.jikan.moe/v4/anime?genres=${genreId}&order_by=popularity&sort=desc&limit=10`);
+            const response = await fetch(`https://api.jikan.moe/v4/anime?genres=${genreId}&order_by=popularity&sort=asc&limit=10`);
 
             if (!response.ok) {
                 throw new Error(`Error ${response.status} en género ${genero}`);
@@ -109,30 +130,26 @@ function crearSeccionGenero(genero, animes, contenedor) {
 
 
 async function mostrarUltimosLanzamientos() {
-    results.innerHTML = '';
-    latestReleases.innerHTML = '';
-
     try {
         const hoy = new Date();
         const yearActual = hoy.getFullYear();
-
         const startDate = `${yearActual}-01-01`;
-        const endDate = hoy.toISOString().split('T')[0]; // Formato: YYYY-MM-DD
+        const endDate = hoy.toISOString().split('T')[0];
 
         const response = await fetch(`https://api.jikan.moe/v4/anime?start_date=${startDate}&end_date=${endDate}&order_by=start_date&sort=desc&limit=20`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
         const data = await response.json();
 
         if (data.data && data.data.length > 0) {
             const animesUnicos = eliminarDuplicados(data.data);
-            const animesFinales = animesUnicos.slice(0, 10); // Solo 10 más recientes
+            const animesFinales = animesUnicos.slice(0, 10);
+            latestReleases.innerHTML = ''; // limpia mensaje de carga
             crearSeccionGenero(`Últimos lanzamientos`, animesFinales, latestReleases);
         } else {
-            latestReleases.innerHTML = `<p>No hay animes de ${yearActual} hasta la fecha.</p>`;
         }
-
     } catch (error) {
         console.error("Error al cargar últimos lanzamientos:", error);
-        latestReleases.innerHTML = '<p>Error cargando últimos lanzamientos.</p>';
     }
 }
 
@@ -151,7 +168,7 @@ function eliminarDuplicados(animes) {
 }
 
 
-input.addEventListener('input', async () => {
+input.addEventListener('input', () => {
     clearTimeout(timeoutId);
     const query = input.value.trim();
 
@@ -162,14 +179,18 @@ input.addEventListener('input', async () => {
 
         latestReleases.style.display = 'block';
         genreSections.style.display = 'block';
+        upcomingReleases.style.display = 'block';
 
-        await cargarContenidoPrincipal();
+        timeoutId = setTimeout(() => {
+            cargarContenidoPrincipal();
+        }, 300);
 
         return;
     }
 
     latestReleases.style.display = 'none';
     genreSections.style.display = 'none';
+    upcomingReleases.style.display = 'none';
 
     results.style.display = '';
     results.innerHTML = '';
@@ -179,6 +200,7 @@ input.addEventListener('input', async () => {
         buscarAnime(query);
     }, 500);
 });
+
 
 
 async function buscarAnime(query) {
@@ -193,7 +215,11 @@ async function buscarAnime(query) {
         }
 
         results.innerHTML = '';
-        data.data.forEach(anime => {
+        
+        // Elimina duplicados antes de mostrarlos
+        const animesUnicos = eliminarDuplicados(data.data);
+
+        animesUnicos.forEach(anime => {
             const title = anime.title_english || anime.title || anime.title_japanese || 'Sin título';
             const year = anime.aired?.from ? new Date(anime.aired.from).getFullYear() : 'N/A';
             const card = document.createElement('div');
@@ -218,6 +244,7 @@ async function buscarAnime(query) {
 }
 
 
+
 // Código modales login y registro (sin cambios relevantes)
 perfilLink.addEventListener('click', (e) => {
     const loggedIn = localStorage.getItem('loggedIn');
@@ -232,11 +259,23 @@ perfilLink.addEventListener('click', (e) => {
 
 closeModal.addEventListener('click', () => {
     loginModal.style.display = 'none';
+    loginForm.reset();
+    const errorDiv = document.getElementById("loginErrorMessage");
+    if (errorDiv) {
+      errorDiv.textContent = "";
+      errorDiv.style.display = "none";
+    }
 });
 
 window.addEventListener('click', (event) => {
     if (event.target === loginModal) {
         loginModal.style.display = 'none';
+        loginForm.reset();
+        const errorDiv = document.getElementById("loginErrorMessage");
+        if (errorDiv) {
+          errorDiv.textContent = "";
+          errorDiv.style.display = "none";
+        }
     }
 });
 
@@ -248,51 +287,54 @@ registerLink.addEventListener('click', (e) => {
 
 closeRegisterModal.addEventListener('click', () => {
     registerModal.style.display = 'none';
+    registerForm.reset();
+    document.querySelectorAll("#registerModal .error-message").forEach(el => el.textContent = "");
 });
 
 window.addEventListener('click', (event) => {
     if (event.target === registerModal) {
         registerModal.style.display = 'none';
+        registerForm.reset();
+        document.querySelectorAll("#registerModal .error-message").forEach(el => el.textContent = "");
     }
 });
 
 loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const email = loginForm.email.value.trim();
-    const password = loginForm.password.value.trim();
+  const errorDiv = document.getElementById("loginErrorMessage");
+  errorDiv.style.display = "none";
+  errorDiv.textContent = "";
 
-    const response = await fetch("https://web-production-62dc.up.railway.app/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, password })
-    });
+  const email = loginForm.email.value.trim();
+  const password = loginForm.password.value.trim();
 
-    const result = await response.json();
+  // aquí tu fetch ...
+  const response = await fetch("https://web-production-62dc.up.railway.app/login", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+  });
 
-    if (result.success) {
-        console.log("El usuario ha iniciado sesión correctamente:", result);
-        alert("Inicio de sesión exitoso");
-        loginModal.style.display = "none";
-        localStorage.setItem('loggedIn', 'true');
-        
-        // Guardar el nombre de usuario si está presente
-        if (result.username) {
-            localStorage.setItem('username', result.username);
-        }
+  const result = await response.json();
 
-        if (result.birthday) {
-            localStorage.setItem('birthday', result.birthday);
-        }
-    
-        window.location.href = "../pages/perfil.html";
-    } else {
-        alert(result.message);
-    }
-    
+  if (result.success) {
+      console.log("El usuario ha iniciado sesión correctamente:", result);
+      loginModal.style.display = "none";
+      localStorage.setItem('loggedIn', 'true');
+      
+      if (result.username) localStorage.setItem('username', result.username);
+      if (result.birthday) localStorage.setItem('birthday', result.birthday);
+
+      window.location.href = "../pages/perfil.html";
+  } else {
+      errorDiv.textContent = result.message || "Error en el inicio de sesión.";
+      errorDiv.style.display = "block";
+  }
 });
+
 
 
 function tiene18anos(birthday) {
@@ -317,17 +359,52 @@ function tiene18anos(birthday) {
 registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // Limpiar mensajes de error antes
+    document.querySelectorAll(".error-message").forEach(el => el.textContent = "");
+
     const username = registerForm.regUsername.value.trim();
     const email = registerForm.regEmail.value.trim();
     const password = registerForm.regPassword.value.trim();
     const repeatPassword = registerForm.regPasswordRepeat.value.trim();
     const birthday = registerForm.regBirthdate.value.trim();
 
-    if (password !== repeatPassword) {
-        alert("Las contraseñas no coinciden");
-        return;
+    let valid = true;
+
+    if (!username) {
+        document.getElementById("errorUsername").textContent = "El usuario es obligatorio.";
+        valid = false;
+    }
+    if (!email) {
+        document.getElementById("errorEmail").textContent = "El correo electrónico es obligatorio.";
+        valid = false;
+    }
+    if (!password) {
+        document.getElementById("errorPassword").textContent = "La contraseña es obligatoria.";
+        valid = false;
+    }
+    if (!repeatPassword) {
+        document.getElementById("errorPasswordRepeat").textContent = "Repite la contraseña.";
+        valid = false;
+    }
+    if (!birthday) {
+        document.getElementById("errorBirthdate").textContent = "La fecha de nacimiento es obligatoria.";
+        valid = false;
     }
 
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (password && !passwordRegex.test(password)) {
+        document.getElementById("errorPassword").textContent = "La contraseña debe tener mínimo 8 caracteres, incluir mayúsculas, minúsculas y números.";
+        valid = false;
+    }
+
+    if (password && repeatPassword && password !== repeatPassword) {
+        document.getElementById("errorPasswordRepeat").textContent = "Las contraseñas no coinciden.";
+        valid = false;
+    }
+
+    if (!valid) return;  // No enviamos si no es válido
+
+    // Si es válido, enviamos el fetch
     try {
         const response = await fetch("https://web-production-62dc.up.railway.app/register", {
             method: "POST",
@@ -342,9 +419,13 @@ registerForm.addEventListener("submit", async (e) => {
         console.log("Respuesta registro:", result);
 
         if (result.success) {
-            console.log("Registro exitoso, antes del alert");
             alert("Registro exitoso");
             registerModal.style.display = "none";
+            registerForm.reset();
+            localStorage.setItem('loggedIn', 'true');
+            localStorage.setItem('username', username);
+            localStorage.setItem('birthday', birthday);
+            window.location.href = "../pages/perfil.html";
         } else {
             alert("Error: " + result.message);
         }
@@ -355,12 +436,12 @@ registerForm.addEventListener("submit", async (e) => {
 });
 
 
-
 async function cargarContenidoPrincipal() {
     latestReleases.innerHTML = '';
     genreSections.innerHTML = '';
 
     await mostrarUltimosLanzamientos();
+    await mostrarProximosLanzamientos();
     await mostrarGeneros();
 }
 

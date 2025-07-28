@@ -1,4 +1,5 @@
 import os
+from urllib import response
 from flask import Flask, request, jsonify, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
@@ -59,6 +60,9 @@ def register():
         "password": hashed_password,
         "birthday": birthday
     }).execute()
+    
+    print(dir(response))
+    print(response)
 
     if response.error is None:
         return jsonify({"success": True, "message": "Usuario registrado correctamente"})

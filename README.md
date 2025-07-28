@@ -2,8 +2,6 @@
   <img src="/img/logo_app.png" alt="App logo" width="500" height="500">
 </div>
 
-[Versión online disponible aquí](https://web-production-62dc.up.railway.app)
-
 Buscador web de anime que utiliza la API pública de **Jikan** para mostrar resultados en tiempo real. Permite buscar títulos de anime y redirige a la página oficial de **MyAnimeList** para ver detalles de cada anime.
 
 **⚠️ Esta aplicación está en desarrollo y puede contener errores o funcionalidades incompletas.**

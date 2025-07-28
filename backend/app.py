@@ -1,13 +1,18 @@
 import os
 from flask import Flask, request, jsonify, send_from_directory
-from db_config import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
+from supabase import create_client
 
 app = Flask(__name__)
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 CORS(app)
 
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 @app.route("/")
 def index():
@@ -38,69 +43,56 @@ def register():
     birthday = data.get("birthday")
 
     if not username or not email or not password or not birthday:
-        app.logger.warning("Faltan campos obligatorios")
         return jsonify({"success": False, "message": "Todos los campos son obligatorios"}), 400
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    # Buscar si existe usuario por email
+    existing = supabase.table("usuarios").select("*").eq("email", email).execute()
 
-    cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
-
-    if cursor.fetchone():
-        cursor.close()
-        conn.close()
+    if existing.data and len(existing.data) > 0:
         return jsonify({"success": False, "message": "Usuario ya registrado"}), 409
 
     hashed_password = generate_password_hash(password)
 
-    try:
-        cursor.execute(
-            "INSERT INTO usuarios (username, email, password, birthday) VALUES (%s, %s, %s, %s)",
-            (username, email, hashed_password, birthday)
-        )
-        conn.commit()
-    except Exception as e:
-        cursor.close()
-        conn.close()
-        return jsonify({"success": False, "message": f"Error al registrar usuario: {e}"}), 500
+    response = supabase.table("usuarios").insert({
+        "username": username,
+        "email": email,
+        "password": hashed_password,
+        "birthday": birthday
+    }).execute()
 
-    cursor.close()
-    conn.close()
-
-    return jsonify({"success": True, "message": "Usuario registrado correctamente"})
+    if response.status_code in (200, 201):
+        return jsonify({"success": True, "message": "Usuario registrado correctamente"})
+    else:
+        return jsonify({"success": False, "message": "Error al registrar usuario"}), 500
 
 
 
 @app.route("/login", methods=["POST"])
 def login():
-    try:
-        data = request.json
-        email = data.get("email")
-        password = data.get("password")
+    data = request.json
+    email = data.get("email")
+    password = data.get("password")
 
-        if not email or not password:
-            return jsonify({"success": False, "message": "Faltan campos obligatorios"}), 400
+    if not email or not password:
+        return jsonify({"success": False, "message": "Faltan campos obligatorios"}), 400
 
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
-        user = cursor.fetchone()
-        cursor.close()
-        conn.close()
+    response = supabase.table("usuarios").select("*").eq("email", email).execute()
+    users = response.data
 
-        if user and check_password_hash(user["password"], password):
-            return jsonify({
-                "success": True,
-                "message": "Login correcto",
-                "username": user["username"],
-                "birthday": user["birthday"]
-            })
-        else:
-            return jsonify({"success": False, "message": "Credenciales incorrectas"}), 401
+    if not users or len(users) == 0:
+        return jsonify({"success": False, "message": "Usuario no encontrado"}), 404
 
-    except Exception as e:
-        app.logger.error(f"Error en /login: {e}")
-        return jsonify({"success": False, "message": "Error interno del servidor"}), 500
+    user = users[0]
+
+    if check_password_hash(user["password"], password):
+        return jsonify({
+            "success": True,
+            "message": "Login correcto",
+            "username": user["username"],
+            "birthday": user["birthday"]
+        })
+    else:
+        return jsonify({"success": False, "message": "Credenciales incorrectas"}), 401
 
 
 

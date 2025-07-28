@@ -26,6 +26,10 @@ header {
     align-items: center;
 }
 
+#saludo {
+    margin-top: 40px;
+}
+
 .navbar {
     position: relative;      /* para posicionar logo con absolute */
     display: flex;

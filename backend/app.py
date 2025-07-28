@@ -46,7 +46,6 @@ def register():
     if not username or not email or not password or not birthday:
         return jsonify({"success": False, "message": "Todos los campos son obligatorios"}), 400
 
-    # Buscar si existe usuario por email
     existing = supabase.table("usuarios").select("*").eq("email", email).execute()
 
     if existing.data and len(existing.data) > 0:
@@ -60,14 +59,13 @@ def register():
         "password": hashed_password,
         "birthday": birthday
     }).execute()
-    
-    print(dir(response))
-    print(response)
 
-    if response.error is None:
+    # Aquí comprobamos si response.data no está vacío
+    if response.data and len(response.data) > 0:
         return jsonify({"success": True, "message": "Usuario registrado correctamente"})
     else:
         return jsonify({"success": False, "message": "Error al registrar usuario"}), 500
+
 
 
 

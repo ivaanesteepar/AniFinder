@@ -244,7 +244,6 @@ async function buscarAnime(query) {
 }
 
 
-
 // Código modales login y registro (sin cambios relevantes)
 perfilLink.addEventListener('click', (e) => {
     const loggedIn = localStorage.getItem('loggedIn');
@@ -334,7 +333,6 @@ loginForm.addEventListener("submit", async (e) => {
       errorDiv.style.display = "block";
   }
 });
-
 
 
 function tiene18anos(birthday) {

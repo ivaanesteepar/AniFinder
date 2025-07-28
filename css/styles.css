@@ -210,13 +210,9 @@ main {
   justify-content: center;
 }
 
-#closeModal {
-  color: #ff69b4;
+#closeModal, #closeRegisterModal {
+  color: white;
   font-weight: bold;
-}
-
-#closeModal:hover {
-  color: #ff1493;
 }
 
 input[type="text"],
@@ -355,13 +351,8 @@ button:hover {
   }
 
   body {
-    padding-top: 200px;
+    padding-top: 110px;
     /* espacio para el header */
-  }
-
-  .logo {
-    padding-top: 20px;
-    padding-bottom: 80px;
   }
 
   .anime-grid {
@@ -388,7 +379,6 @@ button:hover {
     flex-direction: column;
     align-items: center;
     padding: 1rem 1rem 0 1rem;
-    /* padding-top igual para separar del header */
     gap: 0.5rem;
   }
 
@@ -435,7 +425,6 @@ button:hover {
     margin-right: 0 !important;
   }
 
-  /* Ajustes para modales en móvil */
   .modal-content {
     max-width: 90% !important;
     /* que no sea más ancho que el 90% */

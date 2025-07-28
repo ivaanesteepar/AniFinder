@@ -2,7 +2,7 @@
   <img src="/img/logo_app.png" alt="App logo" width="500" height="500">
 </div>
 
-https://web-production-62dc.up.railway.app
+[Versión online disponible aquí](https://web-production-62dc.up.railway.app)
 
 Buscador web de anime que utiliza la API pública de **Jikan** para mostrar resultados en tiempo real. Permite buscar títulos de anime y redirige a la página oficial de **MyAnimeList** para ver detalles de cada anime.
 
@@ -20,6 +20,15 @@ Buscador web de anime que utiliza la API pública de **Jikan** para mostrar resu
 - Utiliza la API pública de **Jikan** para datos actualizados de MyAnimeList.
 
 ## Cómo usar
+
+### Usando la versión online (sin instalación)
+
+1. Accede a la aplicación en:  
+   [https://web-production-62dc.up.railway.app](https://web-production-62dc.up.railway.app)  
+2. Escribe el nombre del anime en el buscador y explora los resultados en tiempo real.  
+3. Haz clic en cualquier resultado para visitar la página oficial del anime en MyAnimeList.
+
+### Usando la versión local
 
 1. Clona o descarga este repositorio.
    

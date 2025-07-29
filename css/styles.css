@@ -38,6 +38,36 @@ main {
   padding-top: 100px;
 }
 
+.footer-links a {
+  margin: 10px 10px 0 10px;
+  display: inline-block; /* Para que el margen funcione bien */
+}
+
+.footer-links a img {
+  width: 40px;
+  height: 40px;
+  display: block;
+  margin: 0 auto;
+  object-fit: cover; /* o prueba quitarlo */
+  transition: transform 0.3s ease;
+  vertical-align: middle;
+}
+
+
+.footer-links a:hover img {
+  transform: scale(1.3);
+  cursor: pointer;
+}
+
+.github-icon img {
+  filter: invert(100%);
+  transition: filter 0.3s ease;
+}
+
+.github-icon img:hover {
+  filter: invert(80%) brightness(1.2);
+}
+
 .navbar {
   position: relative;
   display: flex;
@@ -127,6 +157,7 @@ main {
 #results {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
   max-width: 1500px;
   margin: 0 auto;
   padding: 0 40px;
@@ -365,7 +396,11 @@ button:hover {
 
   .logo {
     padding-right: 190px;
-    margin-top: -10px;
+    margin-top: -15px;
+  }
+
+  .footer-links a:hover img {
+    transform: none !important;
   }
 
   .anime-grid {
@@ -455,16 +490,13 @@ button:hover {
 
   .genre-section h2 {
     text-align: left !important;
-    /* título alineado a la izquierda */
     padding-left: 10px !important;
-    /* un poco de margen a la izquierda */
   }
 
   .genre-section {
     padding-left: 10px !important;
     padding-right: 10px !important;
     max-width: 100% !important;
-    /* para que no limite el ancho */
     margin-left: 0 !important;
     margin-right: 0 !important;
   }

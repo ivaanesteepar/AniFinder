@@ -168,38 +168,41 @@ function eliminarDuplicados(animes) {
 }
 
 
-input.addEventListener('input', () => {
-    clearTimeout(timeoutId);
-    const query = input.value.trim();
+if (input) {
+    input.addEventListener('input', () => {
+        clearTimeout(timeoutId);
+        const query = input.value.trim();
 
-    if (query.length === 0) {
-        loading.style.display = 'none';
+        if (query.length === 0) {
+            loading.style.display = 'none';
+            results.innerHTML = '';
+            results.style.display = 'none';
+
+            latestReleases.style.display = 'block';
+            genreSections.style.display = 'block';
+            upcomingReleases.style.display = 'block';
+
+            timeoutId = setTimeout(() => {
+                cargarContenidoPrincipal();
+            }, 300);
+
+            return;
+        }
+
+        latestReleases.style.display = 'none';
+        genreSections.style.display = 'none';
+        upcomingReleases.style.display = 'none';
+
+        results.style.display = '';
         results.innerHTML = '';
-        results.style.display = 'none';
-
-        latestReleases.style.display = 'block';
-        genreSections.style.display = 'block';
-        upcomingReleases.style.display = 'block';
+        loading.style.display = 'block';
 
         timeoutId = setTimeout(() => {
-            cargarContenidoPrincipal();
-        }, 300);
+            buscarAnime(query);
+        }, 500);
+    });
+}
 
-        return;
-    }
-
-    latestReleases.style.display = 'none';
-    genreSections.style.display = 'none';
-    upcomingReleases.style.display = 'none';
-
-    results.style.display = '';
-    results.innerHTML = '';
-    loading.style.display = 'block';
-
-    timeoutId = setTimeout(() => {
-        buscarAnime(query);
-    }, 500);
-});
 
 
 
@@ -215,7 +218,7 @@ async function buscarAnime(query) {
         }
 
         results.innerHTML = '';
-        
+
         // Elimina duplicados antes de mostrarlos
         const animesUnicos = eliminarDuplicados(data.data);
 
@@ -256,15 +259,18 @@ perfilLink.addEventListener('click', (e) => {
     }
 });
 
-closeModal.addEventListener('click', () => {
-    loginModal.style.display = 'none';
-    loginForm.reset();
-    const errorDiv = document.getElementById("loginErrorMessage");
-    if (errorDiv) {
-      errorDiv.textContent = "";
-      errorDiv.style.display = "none";
-    }
-});
+if (closeModal) {
+    closeModal.addEventListener('click', () => {
+        loginModal.style.display = 'none';
+        loginForm.reset();
+        const errorDiv = document.getElementById("loginErrorMessage");
+        if (errorDiv) {
+            errorDiv.textContent = "";
+            errorDiv.style.display = "none";
+        }
+    });
+}
+
 
 window.addEventListener('click', (event) => {
     if (event.target === loginModal) {
@@ -272,23 +278,29 @@ window.addEventListener('click', (event) => {
         loginForm.reset();
         const errorDiv = document.getElementById("loginErrorMessage");
         if (errorDiv) {
-          errorDiv.textContent = "";
-          errorDiv.style.display = "none";
+            errorDiv.textContent = "";
+            errorDiv.style.display = "none";
         }
     }
 });
 
-registerLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    loginModal.style.display = 'none';
-    registerModal.style.display = 'block';
-});
+if (registerLink) {
+    registerLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (loginModal) loginModal.style.display = 'none';
+        if (registerModal) registerModal.style.display = 'block';
+    });
+}
 
-closeRegisterModal.addEventListener('click', () => {
-    registerModal.style.display = 'none';
-    registerForm.reset();
-    document.querySelectorAll("#registerModal .error-message").forEach(el => el.textContent = "");
-});
+
+if (closeRegisterModal) {
+    closeRegisterModal.addEventListener('click', () => {
+        if (registerModal) registerModal.style.display = 'none';
+        if (registerForm) registerForm.reset();
+        document.querySelectorAll("#registerModal .error-message").forEach(el => el.textContent = "");
+    });
+}
+
 
 window.addEventListener('click', (event) => {
     if (event.target === registerModal) {
@@ -298,60 +310,62 @@ window.addEventListener('click', (event) => {
     }
 });
 
-loginForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-  const errorDiv = document.getElementById("loginErrorMessage");
-  errorDiv.style.display = "none";
-  errorDiv.textContent = "";
+        const errorDiv = document.getElementById("loginErrorMessage");
+        errorDiv.style.display = "none";
+        errorDiv.textContent = "";
 
-  const email = loginForm.email.value.trim();
-  const password = loginForm.password.value.trim();
+        const email = loginForm.email.value.trim();
+        const password = loginForm.password.value.trim();
 
-  const response = await fetch("https://web-production-62dc.up.railway.app/login", {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-  });
+        const response = await fetch("https://web-production-62dc.up.railway.app/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, password })
+        });
 
-  const result = await response.json();
+        const result = await response.json();
 
-  if (result.success) {
-      console.log("El usuario ha iniciado sesión correctamente:", result);
-      loginModal.style.display = "none";
-      localStorage.setItem('loggedIn', 'true');
-      
-      if (result.username) localStorage.setItem('username', result.username);
-      if (result.birthday) localStorage.setItem('birthday', result.birthday);
+        if (result.success) {
+            console.log("El usuario ha iniciado sesión correctamente:", result);
+            loginModal.style.display = "none";
+            localStorage.setItem('loggedIn', 'true');
 
-      window.location.href = "../pages/perfil.html";
-  } else {
-      errorDiv.textContent = result.message || "Error en el inicio de sesión.";
-      errorDiv.style.display = "block";
-  }
-    if (result.success) {
-        console.log("El usuario ha iniciado sesión correctamente:", result);
-        alert("Inicio de sesión exitoso");
-        loginModal.style.display = "none";
-        localStorage.setItem('loggedIn', 'true');
+            if (result.username) localStorage.setItem('username', result.username);
+            if (result.birthday) localStorage.setItem('birthday', result.birthday);
 
-        // Guardar el nombre de usuario si está presente
-        if (result.username) {
-            localStorage.setItem('username', result.username);
+            window.location.href = "../pages/perfil.html";
+        } else {
+            errorDiv.textContent = result.message || "Error en el inicio de sesión.";
+            errorDiv.style.display = "block";
+        }
+        if (result.success) {
+            console.log("El usuario ha iniciado sesión correctamente:", result);
+            alert("Inicio de sesión exitoso");
+            loginModal.style.display = "none";
+            localStorage.setItem('loggedIn', 'true');
+
+            // Guardar el nombre de usuario si está presente
+            if (result.username) {
+                localStorage.setItem('username', result.username);
+            }
+
+            if (result.birthday) {
+                localStorage.setItem('birthday', result.birthday);
+            }
+
+            window.location.href = "../pages/perfil.html";
+        } else {
+            alert(result.message);
         }
 
-        if (result.birthday) {
-            localStorage.setItem('birthday', result.birthday);
-        }
-
-        window.location.href = "../pages/perfil.html";
-    } else {
-        alert(result.message);
-    }
-
-});
+    });
+}
 
 
 function tiene18anos(birthday) {
@@ -373,100 +387,112 @@ function tiene18anos(birthday) {
 }
 
 
-registerForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+if (registerForm) {
+    registerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    // Limpiar mensajes de error antes
-    document.querySelectorAll(".error-message").forEach(el => el.textContent = "");
+        // Limpiar mensajes de error antes
+        document.querySelectorAll(".error-message").forEach(el => el.textContent = "");
 
-    const username = registerForm.regUsername.value.trim();
-    const email = registerForm.regEmail.value.trim();
-    const password = registerForm.regPassword.value.trim();
-    const repeatPassword = registerForm.regPasswordRepeat.value.trim();
-    const birthday = registerForm.regBirthdate.value.trim();
+        const username = registerForm.regUsername.value.trim();
+        const email = registerForm.regEmail.value.trim();
+        const password = registerForm.regPassword.value.trim();
+        const repeatPassword = registerForm.regPasswordRepeat.value.trim();
+        const birthday = registerForm.regBirthdate.value.trim();
 
-    let valid = true;
+        let valid = true;
 
-    if (!username) {
-        document.getElementById("errorUsername").textContent = "El usuario es obligatorio.";
-        valid = false;
-    }
-    if (!email) {
-        document.getElementById("errorEmail").textContent = "El correo electrónico es obligatorio.";
-        valid = false;
-    }
-    if (!password) {
-        document.getElementById("errorPassword").textContent = "La contraseña es obligatoria.";
-        valid = false;
-    }
-    if (!repeatPassword) {
-        document.getElementById("errorPasswordRepeat").textContent = "Repite la contraseña.";
-        valid = false;
-    }
-    if (!birthday) {
-        document.getElementById("errorBirthdate").textContent = "La fecha de nacimiento es obligatoria.";
-        valid = false;
-    }
-
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    if (password && !passwordRegex.test(password)) {
-        document.getElementById("errorPassword").textContent = "La contraseña debe tener mínimo 8 caracteres, incluir mayúsculas, minúsculas y números.";
-        valid = false;
-    }
-
-    if (password && repeatPassword && password !== repeatPassword) {
-        document.getElementById("errorPasswordRepeat").textContent = "Las contraseñas no coinciden.";
-        valid = false;
-    }
-
-    if (!valid) return;  // No enviamos si no es válido
-
-    // Si es válido, enviamos el fetch
-    try {
-        const response = await fetch("https://web-production-62dc.up.railway.app/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ username, email, password, birthday })
-        });
-
-        const result = await response.json();
-
-        console.log("Respuesta registro:", result);
-
-        if (result.success) {
-            alert("Registro exitoso");
-            registerModal.style.display = "none";
-            registerForm.reset();
-            localStorage.setItem('loggedIn', 'true');
-            localStorage.setItem('username', username);
-            localStorage.setItem('birthday', birthday);
-            window.location.href = "../pages/perfil.html";
-        } else {
-            alert("Error: " + result.message);
+        if (!username) {
+            document.getElementById("errorUsername").textContent = "El usuario es obligatorio.";
+            valid = false;
         }
-    } catch (error) {
-        console.error("Error en fetch de registro:", error);
-        alert("Error en la comunicación con el servidor");
+        if (!email) {
+            document.getElementById("errorEmail").textContent = "El correo electrónico es obligatorio.";
+            valid = false;
+        }
+        if (!password) {
+            document.getElementById("errorPassword").textContent = "La contraseña es obligatoria.";
+            valid = false;
+        }
+        if (!repeatPassword) {
+            document.getElementById("errorPasswordRepeat").textContent = "Repite la contraseña.";
+            valid = false;
+        }
+        if (!birthday) {
+            document.getElementById("errorBirthdate").textContent = "La fecha de nacimiento es obligatoria.";
+            valid = false;
+        }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        if (password && !passwordRegex.test(password)) {
+            document.getElementById("errorPassword").textContent = "La contraseña debe tener mínimo 8 caracteres, incluir mayúsculas, minúsculas y números.";
+            valid = false;
+        }
+
+        if (password && repeatPassword && password !== repeatPassword) {
+            document.getElementById("errorPasswordRepeat").textContent = "Las contraseñas no coinciden.";
+            valid = false;
+        }
+
+        if (!valid) return;  // No enviamos si no es válido
+
+        // Si es válido, enviamos el fetch
+        try {
+            const response = await fetch("https://web-production-62dc.up.railway.app/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, email, password, birthday })
+            });
+
+            const result = await response.json();
+
+            console.log("Respuesta registro:", result);
+
+            if (result.success) {
+                alert("Registro exitoso");
+                registerModal.style.display = "none";
+                registerForm.reset();
+                localStorage.setItem('loggedIn', 'true');
+                localStorage.setItem('username', username);
+                localStorage.setItem('birthday', birthday);
+                window.location.href = "../pages/perfil.html";
+            } else {
+                alert("Error: " + result.message);
+            }
+        } catch (error) {
+            console.error("Error en fetch de registro:", error);
+            alert("Error en la comunicación con el servidor");
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const hamburger = document.getElementById("hamburger");
+    const navLinks = document.getElementById("mobileMenu");
+
+    console.log("Hamburger:", hamburger);
+    console.log("NavLinks:", navLinks);
+
+    if (hamburger && navLinks) {
+        hamburger.addEventListener("click", () => {
+            console.log("Hamburger clicado");
+            navLinks.classList.toggle("active");
+        });
     }
 });
-
-document.getElementById("hamburger").addEventListener("click", () => {
-    const navLinks = document.getElementById("mobileMenu");
-    navLinks.classList.toggle("active");
-});
-
 
 
 async function cargarContenidoPrincipal() {
-    latestReleases.innerHTML = '';
-    genreSections.innerHTML = '';
+    if (latestReleases) latestReleases.innerHTML = '';
+    if (genreSections) genreSections.innerHTML = '';
 
-    await mostrarUltimosLanzamientos();
-    await mostrarProximosLanzamientos();
-    await mostrarGeneros();
+    if (latestReleases) await mostrarUltimosLanzamientos();
+    if (upcomingReleases) await mostrarProximosLanzamientos();
+    if (genreSections) await mostrarGeneros();
 }
+
 
 cargarContenidoPrincipal();
 

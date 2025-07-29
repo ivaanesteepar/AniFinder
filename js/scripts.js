@@ -361,7 +361,6 @@ if (loginForm) {
 
             window.location.href = "../pages/perfil.html";
         } else {
-            alert(result.message);
         }
 
     });

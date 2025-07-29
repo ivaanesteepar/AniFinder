@@ -308,7 +308,6 @@ loginForm.addEventListener("submit", async (e) => {
   const email = loginForm.email.value.trim();
   const password = loginForm.password.value.trim();
 
-  // aquí tu fetch ...
   const response = await fetch("https://web-production-62dc.up.railway.app/login", {
       method: "POST",
       headers: {
@@ -332,6 +331,26 @@ loginForm.addEventListener("submit", async (e) => {
       errorDiv.textContent = result.message || "Error en el inicio de sesión.";
       errorDiv.style.display = "block";
   }
+    if (result.success) {
+        console.log("El usuario ha iniciado sesión correctamente:", result);
+        alert("Inicio de sesión exitoso");
+        loginModal.style.display = "none";
+        localStorage.setItem('loggedIn', 'true');
+
+        // Guardar el nombre de usuario si está presente
+        if (result.username) {
+            localStorage.setItem('username', result.username);
+        }
+
+        if (result.birthday) {
+            localStorage.setItem('birthday', result.birthday);
+        }
+
+        window.location.href = "../pages/perfil.html";
+    } else {
+        alert(result.message);
+    }
+
 });
 
 
@@ -432,6 +451,12 @@ registerForm.addEventListener("submit", async (e) => {
         alert("Error en la comunicación con el servidor");
     }
 });
+
+document.getElementById("hamburger").addEventListener("click", () => {
+    const navLinks = document.getElementById("mobileMenu");
+    navLinks.classList.toggle("active");
+});
+
 
 
 async function cargarContenidoPrincipal() {

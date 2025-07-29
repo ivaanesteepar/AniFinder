@@ -467,20 +467,32 @@ if (registerForm) {
     });
 }
 
+
 document.addEventListener("DOMContentLoaded", () => {
     const hamburger = document.getElementById("hamburger");
     const navLinks = document.getElementById("mobileMenu");
 
-    console.log("Hamburger:", hamburger);
-    console.log("NavLinks:", navLinks);
-
     if (hamburger && navLinks) {
-        hamburger.addEventListener("click", () => {
-            console.log("Hamburger clicado");
+        // Toggle del menú al hacer clic en el botón hamburguesa
+        hamburger.addEventListener("click", (e) => {
+            e.stopPropagation(); // Previene que el click llegue al document
             navLinks.classList.toggle("active");
+        });
+
+        // Previene el cierre si haces clic dentro del menú
+        navLinks.addEventListener("click", (e) => {
+            e.stopPropagation();
+        });
+
+        // Cierra el menú si haces clic fuera de él
+        document.addEventListener("click", () => {
+            navLinks.classList.remove("active");
         });
     }
 });
+
+
+
 
 
 async function cargarContenidoPrincipal() {

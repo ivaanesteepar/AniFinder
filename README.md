@@ -43,15 +43,13 @@ Buscador web de anime que utiliza la API pública de **Jikan** para mostrar resu
 
 ## Mejoras futuras
 
-1. Sistema de autenticación: Añadir login y registro de usuarios para personalizar la experiencia, guardar favoritos y gestionar listas de seguimiento.
+1. Restricción por edad: Implementar control parental o verificación de edad para filtrar contenido sensible o clasificado para mayores.
 
-2. Restricción por edad: Implementar control parental o verificación de edad para filtrar contenido sensible o clasificado para mayores.
+2. Favoritos y listas personalizadas: Permitir que los usuarios guarden animes favoritos, creen listas de seguimiento y reciban recomendaciones personalizadas.
 
-3. Favoritos y listas personalizadas: Permitir que los usuarios guarden animes favoritos, creen listas de seguimiento y reciban recomendaciones personalizadas.
+3. Mejoras en la interfaz: Incluir paginación, filtros avanzados (géneros, estado, temporada), modo claro, oscuro, etc.
 
-5. Mejoras en la interfaz: Incluir paginación, filtros avanzados (géneros, estado, temporada), modo claro, oscuro, etc.
-
-6. Migración a React: Reescribir la aplicación usando React para mejorar la mantenibilidad, facilitar la gestión del estado y optimizar la experiencia de usuario con componentes reutilizables.
+4. Migración a React: Reescribir la aplicación usando React para mejorar la mantenibilidad, facilitar la gestión del estado y optimizar la experiencia de usuario con componentes reutilizables.
 
 ---
 

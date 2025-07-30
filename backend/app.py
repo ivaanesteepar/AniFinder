@@ -91,7 +91,8 @@ def login():
             "success": True,
             "message": "Login correcto",
             "username": user["username"],
-            "birthday": user["birthday"]
+            "birthday": user["birthday"],
+            "profilepic": user.get["profilepic", ""]
         })
     else:
         return jsonify({"success": False, "message": "Credenciales incorrectas"}), 401

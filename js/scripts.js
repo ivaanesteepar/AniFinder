@@ -332,6 +332,11 @@ if (loginForm) {
 
             if (result.username) localStorage.setItem('username', result.username);
             if (result.birthday) localStorage.setItem('birthday', result.birthday);
+            if (result.profilepic) {
+                localStorage.setItem('profileIconUrl', result.profilepic);
+            } else {
+                localStorage.removeItem('profileIconUrl');
+            }
 
             window.location.href = "../pages/perfil.html";
         } else {
@@ -481,6 +486,17 @@ document.addEventListener("DOMContentLoaded", () => {
         document.addEventListener("click", () => {
             navLinks.classList.remove("active");
         });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const favoritosLink = document.getElementById('favoritosLink');
+    const loggedInUser = localStorage.getItem('username');
+
+    if (loggedInUser) {
+        favoritosLink.style.display = 'block';
+    } else {
+        favoritosLink.style.display = 'none';
     }
 });
 

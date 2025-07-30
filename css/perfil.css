@@ -8,8 +8,6 @@ body {
     font-family: Arial, sans-serif;
     background: #121212;
     color: #eee;
-    margin: 0;
-    padding: 20px;
     padding-top: 100px;
 }
 
@@ -61,10 +59,10 @@ header {
 }
 
 .nav-links li a {
-  color: white;
-  text-decoration: none;
-  font-weight: 400;
-  font-size: 1.1rem;
+    color: white;
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 1.1rem;
 }
 
 .nav-links li a:hover {
@@ -166,6 +164,21 @@ h1 {
 
 .hamburger {
     display: none;
+}
+
+#profileIconContainer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 40px;
+    width: 100%;
+}
+
+.profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 @media (max-width: 600px) {

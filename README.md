@@ -33,19 +33,22 @@ Buscador web de anime que utiliza la API pública de **Jikan** para mostrar resu
     ```bash
    git clone https://github.com/ivaanesteepar/AniFinder
     ```
-3. Abre el archivo `index.html` en tu navegador (recomendado usar un servidor local para evitar problemas CORS).
+2. Abre el archivo `index.html` en tu navegador (recomendado usar un servidor local para evitar problemas CORS).
    
    ```bash
    python3 -m http.server
     ```
-5. Escribe el nombre del anime en el buscador.
-6. Haz clic en cualquier resultado para abrir la página oficial del anime en MyAnimeList.
+3. Escribe el nombre del anime en el buscador.
+4. Haz clic en cualquier resultado para abrir la página oficial del anime en MyAnimeList.
 
 ## Mejoras futuras
 
 1. Restricción por edad: Implementar control parental o verificación de edad para filtrar contenido sensible o clasificado para mayores.
+   
 2. Favoritos y listas personalizadas: Permitir que los usuarios guarden animes favoritos, creen listas de seguimiento y reciban recomendaciones personalizadas.
+   
 3. Mejoras en la interfaz: Incluir paginación, filtros avanzados (géneros, estado, temporada), modo claro, oscuro, etc.
+   
 4. Migración a React: Reescribir la aplicación usando React para mejorar la mantenibilidad, facilitar la gestión del estado y optimizar la experiencia de usuario con componentes reutilizables.
 
 ---

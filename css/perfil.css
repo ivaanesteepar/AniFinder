@@ -30,7 +30,6 @@ header {
 
 .navbar {
     position: relative;
-    /* para posicionar logo con absolute */
     display: flex;
     align-items: center;
     width: 100%;
@@ -38,7 +37,6 @@ header {
 
 .logo {
     position: absolute;
-    /* para centrar logo */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -49,7 +47,6 @@ header {
 
 .nav-links {
     margin-left: auto;
-    /* empuja menú a la derecha */
     list-style: none;
     display: flex;
     gap: 2rem;
@@ -67,7 +64,6 @@ header {
 
 .nav-links li a:hover {
     color: #f06292;
-    /* color rosado al pasar el mouse */
 }
 
 h1 {
@@ -84,9 +80,7 @@ h1 {
     font-size: 1.1rem;
     border-radius: 30px;
     border: 2px solid #f06292;
-    /* borde rosado visible */
     background-color: #fff;
-    /* fondo claro */
     color: #333;
     box-shadow: 0 2px 5px rgba(240, 98, 146, 0.3);
     transition: box-shadow 0.3s ease, border-color 0.3s ease;
@@ -100,7 +94,6 @@ h1 {
 
 #searchInput:focus {
     border-color: #ec407a;
-    /* borde un poco más fuerte al enfocar */
     box-shadow: 0 0 10px 2px #ec407a66;
     outline: none;
 }
@@ -289,16 +282,13 @@ h1 {
 
     .genre-section h2 {
         text-align: left !important;
-        /* título alineado a la izquierda */
         padding-left: 10px !important;
-        /* un poco de margen a la izquierda */
     }
 
     .genre-section {
         padding-left: 10px !important;
         padding-right: 10px !important;
         max-width: 100% !important;
-        /* para que no limite el ancho */
         margin-left: 0 !important;
         margin-right: 0 !important;
     }
@@ -306,11 +296,8 @@ h1 {
     /* Ajustes para modales en móvil */
     .modal-content {
         max-width: 90% !important;
-        /* que no sea más ancho que el 90% */
         margin: 20px auto !important;
-        /* menos margen arriba y abajo */
         padding: 15px !important;
-        /* menos padding */
         border-radius: 8px;
     }
 

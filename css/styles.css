@@ -40,7 +40,7 @@ main {
 
 .footer-links a {
   margin: 10px 10px 0 10px;
-  display: inline-block; /* Para que el margen funcione bien */
+  display: inline-block; 
 }
 
 .footer-links a img {
@@ -48,9 +48,7 @@ main {
   height: 40px;
   display: block;
   margin: 0 auto;
-  object-fit: cover; /* o prueba quitarlo */
   transition: transform 0.3s ease;
-  vertical-align: middle;
 }
 
 
@@ -509,11 +507,8 @@ button:hover {
   /* Ajustes para modales en móvil */
   .modal-content {
     max-width: 90% !important;
-    /* que no sea más ancho que el 90% */
     margin: 20px auto !important;
-    /* menos margen arriba y abajo */
     padding: 15px !important;
-    /* menos padding */
     border-radius: 8px;
   }
 
@@ -594,12 +589,12 @@ button:hover {
     width: 180px;
     text-align: right;
     z-index: 20;
-    position: relative; /* para que z-index funcione */         
+    position: relative;        
   }
 
   #mobileMenu {
     width: 180px;
-    height: 160px;       /* Más altura fija */
+    height: 160px;    
     background-color: #222;
     position: absolute;
     top: 70px;

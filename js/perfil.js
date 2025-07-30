@@ -200,7 +200,6 @@ function setupFormSubmission() {
 }
 
 
-
 async function updateProfile(username, email, birthday, profilepicBase64) {
     const response = await fetch('/update-profile', {
         method: 'PUT',
@@ -228,7 +227,18 @@ function renderUserData() {
 
     const username = localStorage.getItem('username') || 'No disponible';
     const email = localStorage.getItem('email') || 'No disponible';
-    const birthday = localStorage.getItem('birthday') || 'No disponible';
+    let birthday = localStorage.getItem('birthday') || 'No disponible';
+
+    // Formatear fecha si existe y no es "No disponible"
+    if (birthday !== 'No disponible') {
+        const dateObj = new Date(birthday);
+        if (!isNaN(dateObj)) {
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const year = dateObj.getFullYear();
+            birthday = `${day}-${month}-${year}`;
+        }
+    }
 
     userDataDiv.innerHTML = `
         <div class="user-field">
@@ -245,5 +255,6 @@ function renderUserData() {
         </div>
     `;
 }
+
 
 

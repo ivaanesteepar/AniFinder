@@ -13,7 +13,7 @@ Buscador web de anime que utiliza la API pública de **Jikan** para mostrar resu
 - Búsqueda instantánea con sugerencias en vivo.
 - Visualización de portadas y títulos en tarjetas.
 - Al pulsar una tarjeta, abre la página oficial del anime en MyAnimeList.
-- Si el buscador está vacío, muestra animes recomendados basados en popularidad.
+- Si el buscador está vacío, se muestran los últimos y próximos lanzamientos, así como animes recomendados por género, ordenados por popularidad.
 - Diseño responsive y moderno con HTML, CSS y JavaScript puro.
 - Utiliza la API pública de **Jikan** para datos actualizados de MyAnimeList.
 

@@ -242,17 +242,19 @@ async function buscarAnime(query) {
 }
 
 
-// Código modales login y registro (sin cambios relevantes)
-perfilLink.addEventListener('click', (e) => {
-    const loggedIn = localStorage.getItem('loggedIn');
-    if (loggedIn) {
-        perfilLink.href = '../pages/perfil.html';
-    } else {
-        e.preventDefault();
-        loginModal.style.display = 'block';
-        perfilLink.href = '#';
-    }
-});
+// Código modales login y registro
+if (perfilLink) {
+    perfilLink.addEventListener('click', (e) => {
+        const loggedIn = localStorage.getItem('loggedIn');
+        if (loggedIn) {
+            perfilLink.href = '../pages/perfil.html';
+        } else {
+            e.preventDefault();
+            loginModal.style.display = 'block';
+            perfilLink.href = '#';
+        }
+    });
+}
 
 if (closeModal) {
     closeModal.addEventListener('click', () => {

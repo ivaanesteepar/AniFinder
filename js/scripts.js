@@ -36,6 +36,7 @@ function generarSlug(titulo) {
         .replace(/\s+/g, "-");  // reemplaza espacios por guiones
 }
 
+
 async function mostrarProximosLanzamientos() {
     upcomingReleases.innerHTML = '';
 
@@ -51,6 +52,7 @@ async function mostrarProximosLanzamientos() {
             const animesUnicos = eliminarDuplicados(data.data);
             crearSeccionGenero('Próximos lanzamientos', animesUnicos, upcomingReleases);
         } else {
+            console.log("No se han encontrado datos de próximos lanzamientos")
         }
     } catch (error) {
         console.error('Error al cargar próximos lanzamientos:', error);
@@ -71,11 +73,7 @@ async function mostrarGeneros() {
             }
 
             const data = await response.json();
-
-            console.log(`Datos recibidos para ${genero}:`, data);
-
             if (data.data && data.data.length > 0) {
-                console.log(`Mostrando género: ${genero}, cantidad: ${data.data.length}`);
                 crearSeccionGenero(genero, data.data, genreSections);
             } else {
                 console.log(`No hay resultados para el género: ${genero}`);
@@ -121,8 +119,6 @@ function crearSeccionGenero(genero, animes, contenedor) {
 
         grid.appendChild(card);
     });
-    console.log(`Mostrando género: ${genero}, cantidad: ${animes.length}`);
-
 
     section.appendChild(grid);
     contenedor.appendChild(section);
@@ -147,6 +143,7 @@ async function mostrarUltimosLanzamientos() {
             latestReleases.innerHTML = ''; // limpia mensaje de carga
             crearSeccionGenero(`Últimos lanzamientos`, animesFinales, latestReleases);
         } else {
+            console.log("No se han encontrado datos de últimos lanzamientos")
         }
     } catch (error) {
         console.error("Error al cargar últimos lanzamientos:", error);
@@ -202,8 +199,6 @@ if (input) {
         }, 500);
     });
 }
-
-
 
 
 async function buscarAnime(query) {
@@ -332,7 +327,6 @@ if (loginForm) {
         const result = await response.json();
 
         if (result.success) {
-            console.log("El usuario ha iniciado sesión correctamente:", result);
             loginModal.style.display = "none";
             localStorage.setItem('loggedIn', 'true');
 
@@ -345,8 +339,7 @@ if (loginForm) {
             errorDiv.style.display = "block";
         }
         if (result.success) {
-            console.log("El usuario ha iniciado sesión correctamente:", result);
-            alert("Inicio de sesión exitoso");
+            //alert("Inicio de sesión exitoso");
             loginModal.style.display = "none";
             localStorage.setItem('loggedIn', 'true');
 
@@ -361,6 +354,7 @@ if (loginForm) {
 
             window.location.href = "../pages/perfil.html";
         } else {
+            console.error("Error en el resultado")
         }
 
     });
@@ -462,7 +456,6 @@ if (registerForm) {
             }
         } catch (error) {
             console.error("Error en fetch de registro:", error);
-            alert("Error en la comunicación con el servidor");
         }
     });
 }
@@ -490,9 +483,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
-
-
-
 
 
 async function cargarContenidoPrincipal() {

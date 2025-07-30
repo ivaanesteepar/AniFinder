@@ -474,7 +474,6 @@ button:hover {
 
   #mobileMenu {
     width: 150px;
-    height: 100px;    
     background-color: #222;
     position: absolute;
     top: 100px;
@@ -483,6 +482,7 @@ button:hover {
     border-radius: 4px;
     z-index: 1000;
   }
+  
 
   #results {
     max-width: 100%;

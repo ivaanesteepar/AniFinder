@@ -60,7 +60,6 @@ def register():
         "birthday": birthday
     }).execute()
 
-    # Aquí comprobamos si response.data no está vacío
     if response.data and len(response.data) > 0:
         return jsonify({"success": True, "message": "Usuario registrado correctamente"})
     else:

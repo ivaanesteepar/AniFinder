@@ -1,27 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    checkUserSession();
     renderProfileImage();
     setupLogout();
     setupModalHandlers();
     setupFormSubmission();
     setupImagePreview();
     showImagePreview();
+    renderUserData();
 });
-
-/**
- * Verifica si el usuario tiene sesión iniciada y actualiza el saludo.
- */
-function checkUserSession() {
-    const username = localStorage.getItem('username');
-    const saludo = document.getElementById('saludo');
-
-    if (username && saludo) {
-        saludo.textContent = `Hola, ${username}`;
-    } else {
-        window.location.href = '../pages/home.html'; // Redirigir si no hay sesión
-    }
-}
-
 
 function showImagePreview(src) {
     const imagePreview = document.getElementById('imagePreview');
@@ -103,7 +88,14 @@ function setupModalHandlers() {
         form.reset(); // Resetea los campos del formulario
         imagePreview.src = '';
         imagePreview.style.display = 'none';
-    }
+    
+        // Oculta mensaje de error si está visible
+        const formMessage = document.getElementById('formMessage');
+        if (formMessage) {
+            formMessage.style.display = 'none';
+            formMessage.textContent = '';
+        }
+    }    
 
     closeModalBtn.addEventListener('click', closeAndResetModal);
 
@@ -166,11 +158,6 @@ function setupFormSubmission() {
             return;
         }
 
-        // Guardar localStorage
-        localStorage.setItem('username', newUsername);
-        localStorage.setItem('email', newEmail);
-        localStorage.setItem('birthday', newBirthday);
-
         let base64Image = localStorage.getItem('profileIconUrl');
 
         try {
@@ -178,16 +165,26 @@ function setupFormSubmission() {
                 const reader = new FileReader();
                 reader.onload = async function (event) {
                     base64Image = event.target.result;
-                    localStorage.setItem('profileIconUrl', base64Image);
-                    document.querySelector('#profileIconContainer img').src = base64Image;
 
+                    // Actualizar backend y si va bien, actualizar localStorage
                     await updateProfile(newUsername, newEmail, newBirthday, base64Image);
 
+                    localStorage.setItem('username', newUsername);
+                    localStorage.setItem('email', newEmail);
+                    localStorage.setItem('birthday', newBirthday);
+                    localStorage.setItem('profileIconUrl', base64Image);
+
+                    document.querySelector('#profileIconContainer img').src = base64Image;
                     finalizarActualizacion();
                 };
                 reader.readAsDataURL(newProfileImageFile);
             } else {
                 await updateProfile(newUsername, newEmail, newBirthday, base64Image);
+
+                localStorage.setItem('username', newUsername);
+                localStorage.setItem('email', newEmail);
+                localStorage.setItem('birthday', newBirthday);
+
                 finalizarActualizacion();
             }
         } catch (error) {
@@ -197,11 +194,11 @@ function setupFormSubmission() {
 
         function finalizarActualizacion() {
             modal.style.display = 'none';
-            const saludo = document.getElementById('saludo');
-            if (saludo) saludo.textContent = `Hola, ${newUsername}`;
+            renderUserData();
         }
     });
 }
+
 
 
 async function updateProfile(username, email, birthday, profilepicBase64) {
@@ -224,4 +221,29 @@ async function updateProfile(username, email, birthday, profilepicBase64) {
         throw new Error(data.message);
     }
 }
+
+function renderUserData() {
+    const userDataDiv = document.getElementById('userData');
+    if (!userDataDiv) return;
+
+    const username = localStorage.getItem('username') || 'No disponible';
+    const email = localStorage.getItem('email') || 'No disponible';
+    const birthday = localStorage.getItem('birthday') || 'No disponible';
+
+    userDataDiv.innerHTML = `
+        <div class="user-field">
+            <label>Nombre de usuario</label>
+            <p>${username}</p>
+        </div>
+        <div class="user-field">
+            <label>Correo</label>
+            <p>${email}</p>
+        </div>
+        <div class="user-field">
+            <label>Fecha de nacimiento</label>
+            <p>${birthday}</p>
+        </div>
+    `;
+}
+
 

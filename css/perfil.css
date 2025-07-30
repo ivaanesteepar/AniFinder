@@ -185,7 +185,6 @@ h1 {
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     user-select: none;
 }
@@ -293,7 +292,6 @@ h1 {
 
 .modal-content button[type="submit"]:hover {
     background-color: #f06292;
-    box-shadow: 0 0 10px rgba(240, 98, 146, 0.4);
 }
 
 .modal-content button[type="submit"]:active {
@@ -354,11 +352,49 @@ h1 {
 }
 
 .birthday-container input:focus {
-    border-color: #ec407a;
-    box-shadow: 0 0 8px 2px #ec407a88;
+    border-color: #f06292;
+    box-shadow: 0 0 8px 2px #f06292;
     outline: none;
 }
 
+/* Tarjeta de datos del usuario */
+.user-card {
+    margin-top: 40px; 
+    padding: 30px 40px;
+    width: 500px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    text-align: center;
+    color: #fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.user-field {
+    margin-bottom: 18px; 
+    text-align: center;
+}
+
+.user-field:last-child {
+    margin-bottom: 0; 
+}
+
+.user-field label {
+    display: block;
+    font-weight: bold;
+    color: #f06292;
+    font-size: 20px;
+    margin-bottom: 4px; 
+}
+
+.user-field p {
+    margin: 0;
+    font-size: 18px;
+    color: #ffffff;
+}
 
 
 
@@ -514,6 +550,22 @@ h1 {
         font-size: 1.8rem !important;
         top: 10px !important;
         right: 10px !important;
+    }
+
+    .user-card {
+        width: 90%;     
+        padding: 20px;  
+        margin-top: 20px; 
+        border-radius: 15px;
+        font-size: 0.9rem;
+    }
+
+    .user-field label {
+        font-size: 16px;  
+    }
+
+    .user-field p {
+        font-size: 14px;  
     }
 
 }

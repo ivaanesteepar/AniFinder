@@ -44,12 +44,12 @@ async function mostrarProximosLanzamientos() {
         const hoy = new Date();
         const hoyISO = hoy.toISOString().split('T')[0]; // YYYY-MM-DD
 
-        const response = await fetch(`https://api.jikan.moe/v4/anime?start_date=${hoyISO}&order_by=start_date&sort=asc&limit=10`);
+        const response = await fetch(`https://api.jikan.moe/v4/anime?start_date=${hoyISO}&order_by=start_date&sort=asc&limit=15`);
         const data = await response.json();
 
         if (data.data && data.data.length > 0) {
             // Filtrar duplicados
-            const animesUnicos = eliminarDuplicados(data.data);
+            const animesUnicos = eliminarDuplicados(data.data).slice(0, 10);
             crearSeccionGenero('Próximos lanzamientos', animesUnicos, upcomingReleases);
         } else {
             console.log("No se han encontrado datos de próximos lanzamientos")

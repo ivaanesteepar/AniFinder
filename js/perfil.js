@@ -1,16 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Mostrar email y username para debug
-    const email = localStorage.getItem('email');
-    const username = localStorage.getItem('username');
-    console.log("Email desde localStorage:", email);
-    console.log("Username desde localStorage:", username);
-
     checkUserSession();
     renderProfileImage();
     setupLogout();
     setupModalHandlers();
     setupFormSubmission();
     setupImagePreview();
+    showImagePreview();
 });
 
 /**
@@ -24,6 +19,17 @@ function checkUserSession() {
         saludo.textContent = `Hola, ${username}`;
     } else {
         window.location.href = '../pages/home.html'; // Redirigir si no hay sesión
+    }
+}
+
+
+function showImagePreview(src) {
+    const imagePreview = document.getElementById('imagePreview');
+    if (src) {
+        imagePreview.src = src;
+        imagePreview.style.display = 'block';
+    } else {
+        imagePreview.style.display = 'none';
     }
 }
 
@@ -112,9 +118,9 @@ function setupImagePreview() {
     const fileInput = document.getElementById('profileImageInput');
     const imagePreview = document.getElementById('imagePreview');
 
-    // Opcional: oculta la imagen preview al cargar la página
+    // Oculta la imagen preview al cargar la página
     imagePreview.style.display = 'none';
-    imagePreview.style.maxWidth = '200px'; // para que no sea muy grande
+    imagePreview.style.maxWidth = '200px'; 
 
     fileInput.addEventListener('change', () => {
         const file = fileInput.files[0];
@@ -141,9 +147,13 @@ function setupImagePreview() {
 function setupFormSubmission() {
     const editProfileForm = document.getElementById('editProfileForm');
     const modal = document.getElementById('editProfileModal');
+    const formMessage = document.getElementById('formMessage');
 
-    editProfileForm.addEventListener('submit', (e) => {
+    editProfileForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        formMessage.style.display = 'none';
+        formMessage.textContent = '';
 
         const newUsername = document.getElementById('usernameInput').value.trim();
         const newEmail = document.getElementById('emailInput').value.trim();
@@ -151,31 +161,67 @@ function setupFormSubmission() {
         const newProfileImageFile = document.getElementById('profileImageInput').files[0];
 
         if (newUsername === '') {
-            alert('El nombre de usuario no puede estar vacío');
+            formMessage.textContent = 'El nombre de usuario no puede estar vacío';
+            formMessage.style.display = 'block';
             return;
         }
 
+        // Guardar localStorage
         localStorage.setItem('username', newUsername);
         localStorage.setItem('email', newEmail);
         localStorage.setItem('birthday', newBirthday);
 
-        if (newProfileImageFile) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const base64Image = e.target.result;
-                localStorage.setItem('profileIconUrl', base64Image);
+        let base64Image = localStorage.getItem('profileIconUrl');
 
-                const profileImg = document.querySelector('#profileIconContainer img');
-                profileImg.src = base64Image;
-            };
-            reader.readAsDataURL(newProfileImageFile);
+        try {
+            if (newProfileImageFile) {
+                const reader = new FileReader();
+                reader.onload = async function (event) {
+                    base64Image = event.target.result;
+                    localStorage.setItem('profileIconUrl', base64Image);
+                    document.querySelector('#profileIconContainer img').src = base64Image;
+
+                    await updateProfile(newUsername, newEmail, newBirthday, base64Image);
+
+                    finalizarActualizacion();
+                };
+                reader.readAsDataURL(newProfileImageFile);
+            } else {
+                await updateProfile(newUsername, newEmail, newBirthday, base64Image);
+                finalizarActualizacion();
+            }
+        } catch (error) {
+            formMessage.textContent = 'Error al actualizar perfil: ' + error.message;
+            formMessage.style.display = 'block';
         }
 
-        alert('Perfil actualizado');
-        modal.style.display = 'none';
-
-        const saludo = document.getElementById('saludo');
-        if (saludo) saludo.textContent = `Hola, ${newUsername}`;
+        function finalizarActualizacion() {
+            modal.style.display = 'none';
+            const saludo = document.getElementById('saludo');
+            if (saludo) saludo.textContent = `Hola, ${newUsername}`;
+        }
     });
+}
+
+
+async function updateProfile(username, email, birthday, profilepicBase64) {
+    const response = await fetch('/update-profile', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: username,
+            email: email,
+            birthday: birthday,
+            profilepic: profilepicBase64
+        })
+    });
+
+    const data = await response.json();
+    if (!data.success) {
+        alert('Error al actualizar perfil en backend: ' + data.message);
+        throw new Error(data.message);
+    }
 }
 

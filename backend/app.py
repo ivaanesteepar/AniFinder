@@ -100,6 +100,37 @@ def login():
 
 
 
+@app.route("/update-profile", methods=["PUT"])
+def update_profile():
+    data = request.json
+    email = data.get("email")
+    new_username = data.get("username")
+    new_birthday = data.get("birthday")
+    new_profilepic = data.get("profilepic") 
+
+    if not email:
+        return jsonify({"success": False, "message": "Email es obligatorio para identificar usuario"}), 400
+
+    update_data = {}
+    if new_username:
+        update_data["username"] = new_username
+    if new_birthday:
+        update_data["birthday"] = new_birthday
+    if new_profilepic is not None:
+        update_data["profilepic"] = new_profilepic
+
+    if not update_data:
+        return jsonify({"success": False, "message": "No hay datos para actualizar"}), 400
+
+    response = supabase.table("usuarios").update(update_data).eq("email", email).execute()
+
+    if response.error:
+        return jsonify({"success": False, "message": "Error actualizando perfil: " + response.error.message}), 500
+
+    return jsonify({"success": True, "message": "Perfil actualizado correctamente"})
+
+
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(debug=False, host="0.0.0.0", port=port)

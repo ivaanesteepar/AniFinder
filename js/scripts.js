@@ -330,7 +330,6 @@ if (loginForm) {
         if (result.success) {
             loginModal.style.display = "none";
             localStorage.setItem('loggedIn', 'true');
-            console.log("Resultado login:", result);
         
             if (result.username) localStorage.setItem('username', result.username);
             if (result.email) localStorage.setItem('email', result.email);
@@ -341,7 +340,7 @@ if (loginForm) {
                 localStorage.removeItem('profileIconUrl');
             }
         
-            //window.location.href = "../pages/perfil.html";
+            window.location.href = "../pages/perfil.html";
         } else {
             const errorDiv = document.getElementById("loginErrorMessage");
             errorDiv.textContent = result.message || "Error en el inicio de sesión.";

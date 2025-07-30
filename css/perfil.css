@@ -225,24 +225,34 @@ h1 {
     border: 3px solid #f06292;
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
     text-align: center;
 }
 
 .modal-content label {
     align-self: flex-start;
-    margin-bottom: 5px;  
+    margin-bottom: 5px;
     font-weight: 600;
 }
 
 .modal-content input[type="text"],
-.modal-content input[type="email"],
+.modal-content input[type="email"]{
+    width: 100%;
+    max-width: 350px;
+    padding: 10px 12px;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    border: 2px solid #f06292;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
 .modal-content input[type="file"] {
     width: 100%;
     max-width: 350px;
     padding: 10px 12px;
-    margin-top: 10px;     
-    margin-bottom: 25px; 
+    margin-top: 10px;
     border: 2px solid #f06292;
     border-radius: 8px;
     font-size: 1rem;
@@ -291,10 +301,10 @@ h1 {
 }
 
 #imagePreview {
-    display: block;
-    margin: 0 auto 20px;
-    max-width: 70px; 
-    max-height: 70px;  
+    display: none;
+    margin: -10px auto 20px;
+    max-width: 70px;
+    max-height: 70px;
     width: auto;
     height: auto;
     border-radius: 8px;
@@ -304,9 +314,54 @@ h1 {
     padding-top: 20px;
 }
 
-#birthdayInput {
-    margin-top: 10px;
+
+
+
+.birthday-container {
+    width: 240px;
+    margin: 0 auto 20px;
+    text-align: center;  /* aquí el truco para centrar hijos inline */
 }
+
+#birthdayInput {
+    display: inline-block; /* para que respete text-align */
+    width: 220px;
+    padding: 8px 12px;
+    font-size: 1rem;
+    color: #eee;
+    background-color: #222;
+    border: 2px solid #f06292;
+    border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 6px;
+}
+
+.birthday-container label {
+    color: #f06292;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+.birthday-container input {
+    width: 220px;
+    padding-top: 10px;
+    font-size: 1rem;
+    color: #eee;
+    background-color: #222;
+    border: 2px solid #f06292;
+    border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.birthday-container input:focus {
+    border-color: #ec407a;
+    box-shadow: 0 0 8px 2px #ec407a88;
+    outline: none;
+}
+
+
 
 
 
@@ -432,7 +487,7 @@ h1 {
     /* Ajustes para modales en móvil */
     .modal-content {
         max-width: 90% !important;
-        margin: 20px auto !important;
+        margin: 140px auto !important;
         padding: 15px !important;
         border-radius: 8px;
     }

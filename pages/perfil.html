@@ -27,7 +27,38 @@
     </header>
 
     <main>
-        <div id="profileIconContainer"></div>
+        <!-- Modal de edición de perfil -->
+        <div id="editProfileModal" class="modal">
+            <div class="modal-content">
+                <span id="closeModalBtn" class="close">&times;</span>
+                <h2>Editar perfil</h2>
+                <form id="editProfileForm">
+                    <label for="profileImageInput">Imagen de perfil:</label><br />
+                    <input type="file" id="profileImageInput" accept="image/*" /><br /><br />
+
+                    <img id="imagePreview" alt="Vista previa"
+                        style="max-width: 200px; display: none; margin: 0 auto;" /><br />
+
+                    <label for="usernameInput">Nombre de usuario:</label><br />
+                    <input type="text" id="usernameInput" /><br /><br />
+
+                    <label for="emailInput">Correo electrónico:</label><br />
+                    <input type="email" id="emailInput" /><br /><br />
+
+                    <label for="birthdayInput">Fecha de nacimiento:</label><br />
+                    <input type="date" id="birthdayInput" /><br /><br />
+
+                    <button type="submit">Guardar cambios</button>
+                </form>
+            </div>
+        </div>
+
+
+        <div id="profileIconContainer">
+            <button id="uploadProfilePicBtn">Editar Perfil</button>
+            <input type="file" id="profilePicInput" accept="image/*" style="display:none" />
+        </div>
+
         <h1 id="saludo">Hola</h1>
     </main>
 

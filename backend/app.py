@@ -91,6 +91,7 @@ def login():
             "success": True,
             "message": "Login correcto",
             "username": user["username"],
+            "email": user["email"],
             "birthday": user["birthday"],
             "profilepic": user.get("profilepic", "")
         })

@@ -268,7 +268,6 @@ if (closeModal) {
     });
 }
 
-
 window.addEventListener('click', (event) => {
     if (event.target === loginModal) {
         loginModal.style.display = 'none';
@@ -331,38 +330,23 @@ if (loginForm) {
         if (result.success) {
             loginModal.style.display = "none";
             localStorage.setItem('loggedIn', 'true');
-
+            console.log("Resultado login:", result);
+        
             if (result.username) localStorage.setItem('username', result.username);
+            if (result.email) localStorage.setItem('email', result.email);
             if (result.birthday) localStorage.setItem('birthday', result.birthday);
             if (result.profilepic) {
                 localStorage.setItem('profileIconUrl', result.profilepic);
             } else {
                 localStorage.removeItem('profileIconUrl');
             }
-
-            window.location.href = "../pages/perfil.html";
+        
+            //window.location.href = "../pages/perfil.html";
         } else {
+            const errorDiv = document.getElementById("loginErrorMessage");
             errorDiv.textContent = result.message || "Error en el inicio de sesión.";
             errorDiv.style.display = "block";
-        }
-        if (result.success) {
-            //alert("Inicio de sesión exitoso");
-            loginModal.style.display = "none";
-            localStorage.setItem('loggedIn', 'true');
-
-            // Guardar el nombre de usuario si está presente
-            if (result.username) {
-                localStorage.setItem('username', result.username);
-            }
-
-            if (result.birthday) {
-                localStorage.setItem('birthday', result.birthday);
-            }
-
-            window.location.href = "../pages/perfil.html";
-        } else {
-            console.error("Error en el resultado")
-        }
+        }        
 
     });
 }
@@ -454,9 +438,6 @@ if (registerForm) {
                 alert("Registro exitoso");
                 registerModal.style.display = "none";
                 registerForm.reset();
-                localStorage.setItem('loggedIn', 'true');
-                localStorage.setItem('username', username);
-                localStorage.setItem('birthday', birthday);
                 window.location.href = "../pages/perfil.html";
             } else {
                 alert("Error: " + result.message);

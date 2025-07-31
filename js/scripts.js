@@ -66,7 +66,7 @@ async function mostrarGeneros() {
     for (const [genero, genreId] of generos.entries()) {
         try {
             console.log(`Solicitando datos para género: ${genero} (ID: ${genreId})`);
-            const response = await fetch(`https://api.jikan.moe/v4/anime?genres=${genreId}&order_by=popularity&sort=asc&limit=10`);
+            const response = await fetch(`https://api.jikan.moe/v4/anime?genres=${genreId}&order_by=popularity&sort=asc&limit=15`);
 
             if (!response.ok) {
                 throw new Error(`Error ${response.status} en género ${genero}`);
@@ -74,7 +74,13 @@ async function mostrarGeneros() {
 
             const data = await response.json();
             if (data.data && data.data.length > 0) {
-                crearSeccionGenero(genero, data.data, genreSections);
+                const animesFiltrados = data.data.filter(anime => anime.popularity > 0).slice(0, 10);
+                
+                if(animesFiltrados.length > 0){
+                    crearSeccionGenero(genero, animesFiltrados, genreSections);
+                } else {
+                    console.log(`No hay animes con popularidad > 0 para el género: ${genero}`);
+                }
             } else {
                 console.log(`No hay resultados para el género: ${genero}`);
             }

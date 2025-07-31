@@ -50,7 +50,6 @@
     margin: 0 auto;
     object-fit: cover; 
     transition: transform 0.3s ease;
-    vertical-align: middle;
   }
   
   
@@ -334,8 +333,6 @@
     display: flex;
     flex-wrap: nowrap;
     gap: 10px;
-    overflow-x: auto;
-    overflow-y: hidden;
     height: 100%;
     -webkit-overflow-scrolling: touch;
     justify-content: flex-start;

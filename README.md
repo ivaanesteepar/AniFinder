@@ -19,27 +19,33 @@ Buscador web de anime que utiliza la API pública de **Jikan** para mostrar resu
 
 ## Cómo usar
 
-### Usando la versión online (sin instalación)
+### Usando la versión online
 
 1. Accede a la aplicación en:  
    [https://web-production-62dc.up.railway.app](https://web-production-62dc.up.railway.app)  
-2. Escribe el nombre del anime en el buscador y explora los resultados en tiempo real.  
-3. Haz clic en cualquier resultado para visitar la página oficial del anime en MyAnimeList.
 
 ### Usando la versión local
 
 1. Clona o descarga este repositorio.
    
-    ```bash
+   ```bash
    git clone https://github.com/ivaanesteepar/AniFinder
+   cd AniFinder
     ```
-2. Abre el archivo `index.html` en tu navegador (recomendado usar un servidor local para evitar problemas CORS).
+
+2. Instala las dependencias necesarias.
+
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+    ```
+
+3. Para evitar problemas de CORS al abrir los archivos HTML, ejecuta un servidor local con Python.
    
    ```bash
    python3 -m http.server
     ```
-3. Escribe el nombre del anime en el buscador.
-4. Haz clic en cualquier resultado para abrir la página oficial del anime en MyAnimeList.
 
 ## Mejoras futuras
 

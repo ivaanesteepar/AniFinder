@@ -30,6 +30,8 @@ function renderProfileImage() {
  */
 function setupLogout() {
     const logoutLink = document.getElementById('logoutLink');
+    if (!logoutLink) return;
+
     logoutLink.addEventListener('click', (e) => {
         e.preventDefault();
         localStorage.removeItem('loggedIn');
@@ -39,6 +41,7 @@ function setupLogout() {
         window.location.href = '../pages/home.html';
     });
 }
+
 
 
 /**

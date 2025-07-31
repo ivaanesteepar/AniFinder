@@ -4,19 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setupModalHandlers();
     setupFormSubmission();
     setupImagePreview();
-    showImagePreview();
     renderUserData();
 });
 
-function showImagePreview(src) {
-    const imagePreview = document.getElementById('imagePreview');
-    if (src) {
-        imagePreview.src = src;
-        imagePreview.style.display = 'block';
-    } else {
-        imagePreview.style.display = 'none';
-    }
-}
 
 /**
  * Muestra la imagen de perfil desde localStorage o una por defecto.
@@ -34,6 +24,7 @@ function renderProfileImage() {
     container.prepend(img);
 }
 
+
 /**
  * Configura el enlace de logout para cerrar sesión y redirigir.
  */
@@ -48,6 +39,7 @@ function setupLogout() {
         window.location.href = '../pages/home.html';
     });
 }
+
 
 /**
  * Configura el comportamiento del modal (abrir/cerrar).
@@ -105,6 +97,7 @@ function setupModalHandlers() {
         }
     });
 }
+
 
 function setupImagePreview() {
     const fileInput = document.getElementById('profileImageInput');
@@ -201,7 +194,7 @@ function setupFormSubmission() {
 
 
 async function updateProfile(username, email, birthday, profilepicBase64) {
-    const response = await fetch('/update-profile', {
+    const response = await fetch('https://web-production-62dc.up.railway.app/update-profile', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -220,6 +213,7 @@ async function updateProfile(username, email, birthday, profilepicBase64) {
         throw new Error(data.message);
     }
 }
+
 
 function renderUserData() {
     const userDataDiv = document.getElementById('userData');

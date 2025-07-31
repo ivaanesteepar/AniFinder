@@ -124,9 +124,10 @@ def update_profile():
     response = supabase.table("usuarios").update(update_data).eq("email", email).execute()
 
     if response.data and len(response.data) > 0:
-        return jsonify({"success": False, "message": "Error actualizando perfil: " + response.error.message}), 500
-
-    return jsonify({"success": True, "message": "Perfil actualizado correctamente"})
+        return jsonify({"success": True, "message": "Perfil actualizado correctamente"})
+        
+    return jsonify({"success": False, "message": "Error actualizando perfil: " + response.error.message}), 500
+    
 
 
 

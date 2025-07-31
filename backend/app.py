@@ -35,6 +35,9 @@ def serve_css(filename):
 def serve_img(filename):
     return send_from_directory(os.path.join(root_dir, "img"), filename)
 
+
+
+
 @app.route("/register", methods=["POST"])
 def register():
     data = request.json
@@ -96,6 +99,7 @@ def login():
         })
     else:
         return jsonify({"success": False, "message": "Credenciales incorrectas"}), 401
+
 
 
 

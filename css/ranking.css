@@ -372,10 +372,6 @@ button {
   margin-bottom: 30px !important;
 }
 
-button:hover {
-  background-color: #ff1493;
-}
-
 .genre-section {
   margin-top: 40px;
   margin-bottom: 40px;

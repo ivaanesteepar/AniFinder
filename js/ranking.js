@@ -59,6 +59,7 @@ function crearPaginacion() {
       paginaActual--;
       obtenerAnimesPorPagina(paginaActual);
       crearPaginacion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     paginacionCont.appendChild(btnPrev);
   }
@@ -78,6 +79,7 @@ function crearPaginacion() {
       paginaActual++;
       obtenerAnimesPorPagina(paginaActual);
       crearPaginacion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     paginacionCont.appendChild(btnNext);
   }

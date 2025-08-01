@@ -442,7 +442,6 @@ if (registerForm) {
                 localStorage.setItem('username', username);
                 localStorage.setItem('email', email);
 
-                alert("Registro exitoso");
                 registerModal.style.display = "none";
                 registerForm.reset();
                 window.location.href = "../pages/perfil.html";

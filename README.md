@@ -2,9 +2,9 @@
   <img src="/img/logo_app.png" alt="App logo" width="500" height="500">
 </div>
 
-Buscador web de anime que utiliza la API pública de **Jikan** para mostrar resultados en tiempo real. Permite buscar títulos de anime y redirige a la página oficial de **MyAnimeList** para ver detalles de cada anime.
+![En desarrollo](https://img.shields.io/badge/status-work_in_progress-yellow?style=for-the-badge&logo=github)
 
-**⚠️ Esta aplicación está en desarrollo y puede contener errores o funcionalidades incompletas.**
+Buscador web de anime que utiliza la API pública de **Jikan** para mostrar resultados en tiempo real. Permite buscar títulos de anime y redirige a la página oficial de **MyAnimeList** para ver detalles de cada anime.
 
 > **Nota**: Esta herramienta ha sido creada principalmente para uso personal, pero la comparto públicamente para que pueda ser útil a otras personas interesadas.
 

@@ -340,7 +340,6 @@ if (loginForm) {
                 localStorage.setItem('loggedIn', 'true');
                 if (result.username) localStorage.setItem('username', result.username);
                 if (result.email) localStorage.setItem('email', result.email);
-                // localStorage.removeItem('profileIconUrl');
 
                 window.location.href = "../pages/perfil.html";
             } else {

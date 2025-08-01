@@ -1,21 +1,48 @@
 let paginaActual = 1;
-let totalPaginas = null; 
+let totalPaginas = null;
 
 async function obtenerAnimesPorPagina(pagina) {
-  const url = `https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=${pagina}`;
+  // Si totalPaginas aún no está definido, obtenemos el last_visible real
+  if (totalPaginas === null) {
+    // Consulta página 1
+    const urlPagina1 = `https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=1`;
+    const resp1 = await fetch(urlPagina1);
+    const datos1 = await resp1.json();
+    let lastVisible = datos1.pagination.last_visible_page;
 
+    // Consulta la última página reportada para comprobar si hay más
+    const urlUltima = `https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=${lastVisible}`;
+    const respUlt = await fetch(urlUltima);
+    const datosUlt = await respUlt.json();
+
+    // Actualiza si la última visible cambia
+    if (datosUlt.pagination.last_visible_page !== lastVisible) {
+      lastVisible = datosUlt.pagination.last_visible_page;
+    }
+
+    totalPaginas = lastVisible;
+    console.log("Total páginas reales detectadas:", totalPaginas);
+  }
+
+  // Si el usuario pide página fuera de rango, corregir
+  if (pagina > totalPaginas) {
+    paginaActual = totalPaginas;
+    return obtenerAnimesPorPagina(paginaActual);
+  }
+
+  const url = `https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=${pagina}`;
   try {
     const respuesta = await fetch(url);
     const datos = await respuesta.json();
 
-    totalPaginas = datos.pagination.last_visible_page; // Actualizar total de páginas
-
+    paginaActual = pagina;
     mostrarAnimes(datos.data);
-    crearPaginacion(); // Actualizamos la paginación tras obtener datos y total páginas
+    crearPaginacion();
   } catch (error) {
     console.error("Error al obtener los animes populares:", error);
   }
 }
+
 
 
 function mostrarAnimes(animes) {
@@ -65,7 +92,9 @@ function mostrarAnimes(animes) {
 
 
 function crearPaginacion() {
-  if (!totalPaginas) return; // Si no sabemos el total, no mostramos paginación
+  console.log("Total páginas:", totalPaginas);
+  console.log("Página actual:", paginaActual);
+  if (!totalPaginas) return;
 
   const paginacionCont = document.getElementById('paginacion');
   paginacionCont.innerHTML = '';
@@ -75,8 +104,7 @@ function crearPaginacion() {
     const btnPrimera = document.createElement('button');
     btnPrimera.textContent = '« Primera';
     btnPrimera.onclick = () => {
-      paginaActual = 1;
-      obtenerAnimesPorPagina(paginaActual);
+      obtenerAnimesPorPagina(1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     paginacionCont.appendChild(btnPrimera);
@@ -87,8 +115,7 @@ function crearPaginacion() {
     const btnPrev = document.createElement('button');
     btnPrev.textContent = paginaActual - 1;
     btnPrev.onclick = () => {
-      paginaActual--;
-      obtenerAnimesPorPagina(paginaActual);
+      obtenerAnimesPorPagina(paginaActual - 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     paginacionCont.appendChild(btnPrev);
@@ -102,14 +129,17 @@ function crearPaginacion() {
   paginacionCont.appendChild(btnActual);
 
   // Botón página siguiente
-  if (paginaActual < totalPaginas) {
+  if (paginaActual + 1 <= totalPaginas) {
     const btnNext = document.createElement('button');
     btnNext.textContent = paginaActual + 1;
     btnNext.onclick = () => {
-      paginaActual++;
-      obtenerAnimesPorPagina(paginaActual);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+      const siguiente = paginaActual + 1;
+      if (siguiente <= totalPaginas) {
+        paginaActual = siguiente;
+        obtenerAnimesPorPagina(paginaActual);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };    
     paginacionCont.appendChild(btnNext);
   }
 
@@ -118,13 +148,13 @@ function crearPaginacion() {
     const btnUltima = document.createElement('button');
     btnUltima.textContent = 'Última »';
     btnUltima.onclick = () => {
-      paginaActual = totalPaginas;
-      obtenerAnimesPorPagina(paginaActual);
+      obtenerAnimesPorPagina(totalPaginas);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     paginacionCont.appendChild(btnUltima);
   }
 }
+
 
 // Inicializar
 obtenerAnimesPorPagina(paginaActual);

@@ -1,30 +1,38 @@
 async function obtenerTop50AnimesPopulares() {
     const urls = [
-      'https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=1',
-      'https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=2'
+        'https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=1',
+        'https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=2'
     ];
 
     try {
-      const respuestas = await Promise.all(urls.map(url => fetch(url)));
-      const datos = await Promise.all(respuestas.map(res => res.json()));
-      const animes = datos.flatMap(d => d.data);
-      mostrarAnimes(animes);
+        const respuestas = await Promise.all(urls.map(url => fetch(url)));
+        const datos = await Promise.all(respuestas.map(res => res.json()));
+        const animes = datos.flatMap(d => d.data);
+        mostrarAnimes(animes);
     } catch (error) {
-      console.error("Error al obtener los animes populares:", error);
+        console.error("Error al obtener los animes populares:", error);
     }
-  }
+}
 
-  function mostrarAnimes(animes) {
+function mostrarAnimes(animes) {
     const contenedor = document.getElementById('anime-list');
     const maxPopularidad = 5000;
 
     animes.forEach(anime => {
-      const card = document.createElement('div');
-      card.className = 'anime-card';
+        const porcentaje = Math.max(0, 100 - (anime.popularity / maxPopularidad) * 100);
 
-      const porcentaje = Math.max(0, 100 - (anime.popularity / maxPopularidad) * 100);
+        // Crear enlace que envolverá la card
+        const enlace = document.createElement('a');
+        enlace.href = anime.url;             
+        enlace.target = '_blank';           
+        enlace.rel = 'noopener noreferrer'; 
+        enlace.className = 'anime-card-link';
 
-      card.innerHTML = `
+        // Crear div card dentro del enlace
+        const card = document.createElement('div');
+        card.className = 'anime-card';
+
+        card.innerHTML = `
         <img src="${anime.images.jpg.image_url}" alt="${anime.title}">
         <div class="anime-info">
           <div class="anime-title">${anime.title}</div>
@@ -35,8 +43,10 @@ async function obtenerTop50AnimesPopulares() {
         </div>
       `;
 
-      contenedor.appendChild(card);
+        enlace.appendChild(card);
+        contenedor.appendChild(enlace);
     });
-  }
+}
 
-  obtenerTop50AnimesPopulares();
+
+obtenerTop50AnimesPopulares();

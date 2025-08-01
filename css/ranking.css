@@ -471,6 +471,14 @@ button {
     padding-top: 20px;
   }
 
+  #paginacion button {
+    padding: 6px 8px;
+    font-size: 0.75rem;
+    min-width: 30px;
+    height: 30px;
+    border-radius: 4px;
+  }
+
   .logo {
     padding-right: 190px;
     margin-top: -15px;

@@ -51,6 +51,19 @@ function crearPaginacion() {
   const paginacionCont = document.getElementById('paginacion');
   paginacionCont.innerHTML = '';
 
+  // Botón "Primera página"
+  if (paginaActual > 1) {
+    const btnPrimera = document.createElement('button');
+    btnPrimera.textContent = '« Primera';
+    btnPrimera.onclick = () => {
+      paginaActual = 1;
+      obtenerAnimesPorPagina(paginaActual);
+      crearPaginacion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    paginacionCont.appendChild(btnPrimera);
+  }
+
   // Botón página anterior
   if (paginaActual > 1) {
     const btnPrev = document.createElement('button');
@@ -83,8 +96,20 @@ function crearPaginacion() {
     };
     paginacionCont.appendChild(btnNext);
   }
-}
 
+  // Botón "Última página"
+  if (paginaActual < totalPaginas) {
+    const btnUltima = document.createElement('button');
+    btnUltima.textContent = 'Última »';
+    btnUltima.onclick = () => {
+      paginaActual = totalPaginas;
+      obtenerAnimesPorPagina(paginaActual);
+      crearPaginacion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    paginacionCont.appendChild(btnUltima);
+  }
+}
 
 
 // Inicializar

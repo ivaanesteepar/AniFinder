@@ -21,6 +21,7 @@ async function fetchConRetry(url, retries = 3, delayMs = 2000) {
   }
 }
 
+
 async function obtenerAnimesPorPagina(pagina) {
   const spinner = document.getElementById('spinner');
 
@@ -92,11 +93,13 @@ async function obtenerAnimesPorPagina(pagina) {
   }
 }
 
+
 function resetEstado() {
   paginaActual = 1;
   totalPaginas = null;
   primeraCarga = true;
 }
+
 
 function mostrarAnimes(animes) {
   const contenedor = document.getElementById('anime-list');
@@ -147,8 +150,6 @@ function mostrarAnimes(animes) {
 
 
 function crearPaginacion() {
-  console.log("Total páginas:", totalPaginas);
-  console.log("Página actual:", paginaActual);
   if (!totalPaginas) return;
 
   const paginacionCont = document.getElementById('paginacion');

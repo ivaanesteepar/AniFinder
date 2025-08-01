@@ -74,6 +74,23 @@ main {
   border-color: #f06292;
 }
 
+#paginacion {
+  display: flex;
+  justify-content: center; 
+  gap: 10px;               
+  margin-top: 20px;   
+  margin-bottom: 20px;     
+}
+
+#paginacion button.activo {
+  background-color: #fdeef4; 
+  color: #880e4f;     
+  cursor: default;
+  font-weight: bold;
+  border: none;
+  box-shadow: 0 0 5px #f8bbd0; 
+}
+
 .anime-card img {
   width: 80px;
   height: auto;

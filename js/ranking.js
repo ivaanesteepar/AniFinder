@@ -102,7 +102,6 @@ function mostrarAnimes(animes) {
   const contenedor = document.getElementById('anime-list');
   contenedor.innerHTML = ''; // Limpiar animes previos
 
-  // Filtrar duplicados por mal_id
   const animesUnicos = [];
   const idsVistos = new Set();
 
@@ -114,9 +113,12 @@ function mostrarAnimes(animes) {
   });
 
   const maxPopularidad = 5000;
+  const animesPorPagina = 25; // Estándar de la API de Jikan
+  const inicioRanking = (paginaActual - 1) * animesPorPagina + 1;
 
-  animesUnicos.forEach(anime => {
+  animesUnicos.forEach((anime, index) => {
     const porcentaje = Math.max(0, 100 - (anime.popularity / maxPopularidad) * 100);
+    const rankingActual = inicioRanking + index;
 
     const enlace = document.createElement('a');
     enlace.href = anime.url;
@@ -132,16 +134,17 @@ function mostrarAnimes(animes) {
         <div class="anime-info">
             <div class="anime-title">${anime.title}</div>
             <div class="barra-popularidad">
-            <div class="barra-interna" style="width: ${porcentaje}%;"></div>
+              <div class="barra-interna" style="width: ${porcentaje}%;"></div>
             </div>
-            <div class="pop-rank">Popularidad #${anime.popularity}</div>
+            <div class="pop-rank">#${rankingActual}</div>
         </div>
-        `;
+    `;
 
     enlace.appendChild(card);
     contenedor.appendChild(enlace);
   });
 }
+
 
 function crearPaginacion() {
   console.log("Total páginas:", totalPaginas);

@@ -99,6 +99,33 @@ main {
   flex-shrink: 0;
 }
 
+#spinner {
+  display: none;          /* Oculto por defecto */
+  position: fixed;        /* Fijo en la ventana */
+  top: 50%;               /* 50% desde arriba */
+  left: 50%;              /* 50% desde la izquierda */
+  transform: translate(-50%, -50%);  /* Centrar el centro del spinner */
+  z-index: 9999;          /* Por encima de todo */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .anime-info {
   flex: 1;
   margin-left: 1rem;

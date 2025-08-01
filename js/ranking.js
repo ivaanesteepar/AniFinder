@@ -1,49 +1,102 @@
 let paginaActual = 1;
 let totalPaginas = null;
+let primeraCarga = true;
+
+// Cache para guardar los datos ya obtenidos por página
+const cacheAnimesPorPagina = {};
+
+
+async function fetchConRetry(url, retries = 3, delayMs = 2000) {
+  for (let i = 0; i <= retries; i++) {
+    const resp = await fetch(url);
+    if (resp.status === 429) {
+      if (i === retries) {
+        throw new Error('Demasiados intentos: rate limit persistente');
+      }
+      console.warn(`Rate limit excedido, esperando ${delayMs}ms antes de reintentar...`);
+      await new Promise(r => setTimeout(r, delayMs));
+    } else {
+      return resp;
+    }
+  }
+}
 
 async function obtenerAnimesPorPagina(pagina) {
-  // Si totalPaginas aún no está definido, obtenemos el last_visible real
-  if (totalPaginas === null) {
-    // Consulta página 1
-    const urlPagina1 = `https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=1`;
-    const resp1 = await fetch(urlPagina1);
-    const datos1 = await resp1.json();
-    let lastVisible = datos1.pagination.last_visible_page;
+  const spinner = document.getElementById('spinner');
 
-    // Consulta la última página reportada para comprobar si hay más
-    const urlUltima = `https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=${lastVisible}`;
-    const respUlt = await fetch(urlUltima);
-    const datosUlt = await respUlt.json();
+  if (primeraCarga) {
+    spinner.style.display = 'block';  
+  }
 
-    // Actualiza si la última visible cambia
-    if (datosUlt.pagination.last_visible_page !== lastVisible) {
-      lastVisible = datosUlt.pagination.last_visible_page;
+  try {
+    if (totalPaginas === null) {
+      const urlPagina1 = `https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=1`;
+      const resp1 = await fetchConRetry(urlPagina1);
+      const datos1 = await resp1.json();
+      let lastVisible = datos1.pagination.last_visible_page;
+
+      const urlUltima = `https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=${lastVisible}`;
+      const respUlt = await fetchConRetry(urlUltima);
+      const datosUlt = await respUlt.json();
+
+      if (datosUlt.pagination?.last_visible_page && datosUlt.pagination.last_visible_page !== lastVisible) {
+        lastVisible = datosUlt.pagination.last_visible_page;
+      }
+
+      totalPaginas = lastVisible;
+      console.log("Total páginas reales detectadas:", totalPaginas);
     }
 
-    totalPaginas = lastVisible;
-    console.log("Total páginas reales detectadas:", totalPaginas);
-  }
+    if (pagina > totalPaginas) {
+      paginaActual = totalPaginas;
+      if (primeraCarga) spinner.style.display = 'none'; 
+      return obtenerAnimesPorPagina(paginaActual);
+    }
 
-  // Si el usuario pide página fuera de rango, corregir
-  if (pagina > totalPaginas) {
-    paginaActual = totalPaginas;
-    return obtenerAnimesPorPagina(paginaActual);
-  }
+    // Comprobar si ya tenemos cache para esta página
+    if (cacheAnimesPorPagina[pagina]) {
+      console.log(`Usando cache para página ${pagina}`);
+      console.log(cacheAnimesPorPagina[pagina]);
+      paginaActual = pagina;
+      mostrarAnimes(cacheAnimesPorPagina[pagina]);
+      crearPaginacion();
+      return;
+    }
 
-  const url = `https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=${pagina}`;
-  try {
-    const respuesta = await fetch(url);
+    // Si no está en cache, hacemos la petición
+    const url = `https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=${pagina}`;
+    const respuesta = await fetchConRetry(url);
     const datos = await respuesta.json();
+
+    if (!datos.data || !Array.isArray(datos.data)) {
+      console.error("Datos inválidos recibidos de la API:", datos);
+      mostrarAnimes([]);  // Mostrar vacío para evitar errores
+      crearPaginacion();
+      return;
+    }
+
+    // Guardamos en cache
+    cacheAnimesPorPagina[pagina] = datos.data;
 
     paginaActual = pagina;
     mostrarAnimes(datos.data);
     crearPaginacion();
+
   } catch (error) {
     console.error("Error al obtener los animes populares:", error);
+  } finally {
+    if (primeraCarga) {
+      spinner.style.display = 'none'; 
+      primeraCarga = false;         
+    }
   }
 }
 
-
+function resetEstado() {
+  paginaActual = 1;
+  totalPaginas = null;
+  primeraCarga = true;
+}
 
 function mostrarAnimes(animes) {
   const contenedor = document.getElementById('anime-list');
@@ -89,7 +142,6 @@ function mostrarAnimes(animes) {
     contenedor.appendChild(enlace);
   });
 }
-
 
 function crearPaginacion() {
   console.log("Total páginas:", totalPaginas);
@@ -155,6 +207,6 @@ function crearPaginacion() {
   }
 }
 
-
 // Inicializar
+resetEstado();
 obtenerAnimesPorPagina(paginaActual);

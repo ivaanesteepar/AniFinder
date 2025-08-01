@@ -1,5 +1,5 @@
 let paginaActual = 1;
-const totalPaginas = 10;
+let totalPaginas = null; 
 
 async function obtenerAnimesPorPagina(pagina) {
   const url = `https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=${pagina}`;
@@ -7,19 +7,35 @@ async function obtenerAnimesPorPagina(pagina) {
   try {
     const respuesta = await fetch(url);
     const datos = await respuesta.json();
+
+    totalPaginas = datos.pagination.last_visible_page; // Actualizar total de páginas
+
     mostrarAnimes(datos.data);
+    crearPaginacion(); // Actualizamos la paginación tras obtener datos y total páginas
   } catch (error) {
     console.error("Error al obtener los animes populares:", error);
   }
 }
 
+
 function mostrarAnimes(animes) {
   const contenedor = document.getElementById('anime-list');
   contenedor.innerHTML = ''; // Limpiar animes previos
 
-  const maxPopularidad = 5000;
+  // Filtrar duplicados por mal_id
+  const animesUnicos = [];
+  const idsVistos = new Set();
 
   animes.forEach(anime => {
+    if (!idsVistos.has(anime.mal_id)) {
+      idsVistos.add(anime.mal_id);
+      animesUnicos.push(anime);
+    }
+  });
+
+  const maxPopularidad = 5000;
+
+  animesUnicos.forEach(anime => {
     const porcentaje = Math.max(0, 100 - (anime.popularity / maxPopularidad) * 100);
 
     const enlace = document.createElement('a');
@@ -47,7 +63,10 @@ function mostrarAnimes(animes) {
   });
 }
 
+
 function crearPaginacion() {
+  if (!totalPaginas) return; // Si no sabemos el total, no mostramos paginación
+
   const paginacionCont = document.getElementById('paginacion');
   paginacionCont.innerHTML = '';
 
@@ -58,7 +77,6 @@ function crearPaginacion() {
     btnPrimera.onclick = () => {
       paginaActual = 1;
       obtenerAnimesPorPagina(paginaActual);
-      crearPaginacion();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     paginacionCont.appendChild(btnPrimera);
@@ -71,7 +89,6 @@ function crearPaginacion() {
     btnPrev.onclick = () => {
       paginaActual--;
       obtenerAnimesPorPagina(paginaActual);
-      crearPaginacion();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     paginacionCont.appendChild(btnPrev);
@@ -91,7 +108,6 @@ function crearPaginacion() {
     btnNext.onclick = () => {
       paginaActual++;
       obtenerAnimesPorPagina(paginaActual);
-      crearPaginacion();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     paginacionCont.appendChild(btnNext);
@@ -104,14 +120,11 @@ function crearPaginacion() {
     btnUltima.onclick = () => {
       paginaActual = totalPaginas;
       obtenerAnimesPorPagina(paginaActual);
-      crearPaginacion();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     paginacionCont.appendChild(btnUltima);
   }
 }
 
-
 // Inicializar
 obtenerAnimesPorPagina(paginaActual);
-crearPaginacion();

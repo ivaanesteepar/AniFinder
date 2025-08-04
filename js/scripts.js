@@ -11,6 +11,12 @@ const registerModal = document.getElementById('registerModal');
 const closeRegisterModal = document.getElementById('closeRegisterModal');
 const registerForm = document.getElementById('registerForm');
 
+const filterButton = document.getElementById('filterButton');
+const filterDropdown = document.getElementById('filterDropdown');
+
+let selectedGenres = [];
+
+// Para la pantalla de inicio
 const generos = new Map([
     ['Acción', 1],
     ['Romance', 22],
@@ -18,6 +24,53 @@ const generos = new Map([
     ['Terror', 14],
     ['Fantasía', 10],
 ]);
+
+// Para la búsqueda
+const genreMap = { 
+    "action": 1,
+    "adventure": 2,
+    "cars": 3,
+    "comedy": 4,
+    "dementia": 5,
+    "demons": 6,
+    "mystery": 7,
+    "drama": 8,
+    "ecchi": 9,
+    "fantasy": 10,
+    "game": 11,
+    "hentai": 12,
+    "historical": 13,
+    "horror": 14,
+    "kids": 15,
+    "magic": 16,
+    "martial-arts": 17,
+    "mecha": 18,
+    "music": 19,
+    "parody": 20,
+    "samurai": 21,
+    "romance": 22,
+    "school": 23,
+    "sci-fi": 24,
+    "shoujo": 25,
+    "shoujo-ai": 26,
+    "shounen": 27,
+    "shounen-ai": 28,
+    "space": 29,
+    "sports": 30,
+    "super-power": 31,
+    "vampire": 32,
+    "yaoi": 33,
+    "yuri": 34,
+    "harem": 35,
+    "slice-of-life": 36,
+    "supernatural": 37,
+    "military": 38,
+    "police": 39,
+    "psychological": 40,
+    "thriller": 41,
+    "seinen": 42,
+    "josei": 43
+};
 
 const results = document.getElementById('results');
 const latestReleases = document.getElementById('latestReleases');
@@ -75,8 +128,8 @@ async function mostrarGeneros() {
             const data = await response.json();
             if (data.data && data.data.length > 0) {
                 const animesFiltrados = data.data.filter(anime => anime.popularity > 0).slice(0, 10);
-                
-                if(animesFiltrados.length > 0){
+
+                if (animesFiltrados.length > 0) {
                     crearSeccionGenero(genero, animesFiltrados, genreSections);
                 } else {
                     console.log(`No hay animes con popularidad > 0 para el género: ${genero}`);
@@ -201,15 +254,35 @@ if (input) {
         loading.style.display = 'block';
 
         timeoutId = setTimeout(() => {
-            buscarAnime(query);
+            buscarAnime(query, selectedGenres);
         }, 500);
     });
 }
 
 
-async function buscarAnime(query) {
+async function buscarAnime(query = '', genres = []) {
     try {
-        const response = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=12`);
+        const baseUrl = 'https://api.jikan.moe/v4/anime?limit=12';
+        const params = [];
+
+        if (query.trim().length > 0) {
+            params.push(`q=${encodeURIComponent(query)}`);
+        }
+
+        // Filtrar géneros válidos (números)
+        const genreNums = genres.filter(g => !isNaN(parseInt(g)));
+
+        if (genreNums.length > 0) {
+            params.push(`genres=${genreNums.join(',')}`);
+            params.push('genres_exclude=0');
+        }
+
+        const url = params.length > 0 ? `${baseUrl}&${params.join('&')}` : baseUrl;
+
+        console.log('url generada:', url);
+        console.log('Buscar anime con:', { query, genres });
+
+        const response = await fetch(url);
         const data = await response.json();
 
         if (!data.data || data.data.length === 0) {
@@ -219,8 +292,6 @@ async function buscarAnime(query) {
         }
 
         results.innerHTML = '';
-
-        // Elimina duplicados antes de mostrarlos
         const animesUnicos = eliminarDuplicados(data.data);
 
         animesUnicos.forEach(anime => {
@@ -294,7 +365,6 @@ if (registerLink) {
     });
 }
 
-
 if (closeRegisterModal) {
     closeRegisterModal.addEventListener('click', () => {
         if (registerModal) registerModal.style.display = 'none';
@@ -354,8 +424,6 @@ if (loginForm) {
         }
     });
 }
-
-
 
 function tiene18anos(birthday) {
     if (!birthday) return false;
@@ -454,7 +522,6 @@ if (registerForm) {
 }
 
 
-
 document.addEventListener("DOMContentLoaded", () => {
     const hamburger = document.getElementById("hamburger");
     const navLinks = document.getElementById("mobileMenu");
@@ -466,12 +533,12 @@ document.addEventListener("DOMContentLoaded", () => {
             navLinks.classList.toggle("active");
         });
 
-        // Previene el cierre si haces clic dentro del menú
+        // Previene el cierre si se hace clic dentro del menú
         navLinks.addEventListener("click", (e) => {
             e.stopPropagation();
         });
 
-        // Cierra el menú si haces clic fuera de él
+        // Cierra el menú si se hace clic fuera de él
         document.addEventListener("click", () => {
             navLinks.classList.remove("active");
         });
@@ -499,18 +566,45 @@ async function cargarContenidoPrincipal() {
     if (genreSections) await mostrarGeneros();
 }
 
-const filterButton = document.getElementById('filterButton');
-const filterDropdown = document.getElementById('filterDropdown');
 
 filterButton.addEventListener('click', () => {
-  filterDropdown.classList.toggle('hidden');
+    filterDropdown.classList.toggle('hidden');
 });
 
 document.addEventListener('click', (event) => {
-  if (!filterDropdown.contains(event.target) && !filterButton.contains(event.target)) {
-    filterDropdown.classList.add('hidden');
-  }
+    if (!filterDropdown.contains(event.target) && !filterButton.contains(event.target)) {
+        filterDropdown.classList.add('hidden');
+    }
 });
+
+document.getElementById("applyFilters").addEventListener("click", async () => {
+    const query = document.getElementById("searchInput").value.trim();
+
+    selectedGenres = Array.from(document.querySelectorAll('input[name="genre"]:checked'))
+        .map(cb => genreMap[cb.value])
+        .filter(id => id !== undefined);
+
+    const resultsContainer = document.getElementById("results");
+
+    if (selectedGenres.length === 0 && query === '') {
+        resultsContainer.innerHTML = "";
+        document.getElementById("latestReleases").style.display = "block";
+        document.getElementById("upcomingReleases").style.display = "block";
+        document.getElementById("genreSections").style.display = "block";
+        return;
+    }
+
+    document.getElementById("latestReleases").style.display = "none";
+    document.getElementById("upcomingReleases").style.display = "none";
+    document.getElementById("genreSections").style.display = "none";
+
+    resultsContainer.style.display = '';
+    resultsContainer.innerHTML = '';
+    loading.style.display = 'block';
+
+    buscarAnime(query, selectedGenres);
+});
+
 
 
 cargarContenidoPrincipal();

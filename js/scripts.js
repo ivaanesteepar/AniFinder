@@ -262,7 +262,7 @@ if (input) {
 
 async function buscarAnime(query = '', genres = []) {
     try {
-        const baseUrl = 'https://api.jikan.moe/v4/anime?limit=12';
+        const baseUrl = 'https://api.jikan.moe/v4/anime?limit=24';
         const params = [];
 
         if (query.trim().length > 0) {
@@ -279,14 +279,11 @@ async function buscarAnime(query = '', genres = []) {
 
         const url = params.length > 0 ? `${baseUrl}&${params.join('&')}` : baseUrl;
 
-        console.log('url generada:', url);
-        console.log('Buscar anime con:', { query, genres });
-
         const response = await fetch(url);
         const data = await response.json();
 
         if (!data.data || data.data.length === 0) {
-            results.innerHTML = '<p>No se encontraron animes.</p>';
+            results.innerHTML = '<p style="margin-top: 2rem;">No se encontraron animes.</p>';
             loading.style.display = 'none';
             return;
         }

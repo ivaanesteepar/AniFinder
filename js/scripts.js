@@ -499,5 +499,18 @@ async function cargarContenidoPrincipal() {
     if (genreSections) await mostrarGeneros();
 }
 
+const filterButton = document.getElementById('filterButton');
+const filterDropdown = document.getElementById('filterDropdown');
+
+filterButton.addEventListener('click', () => {
+  filterDropdown.classList.toggle('hidden');
+});
+
+document.addEventListener('click', (event) => {
+  if (!filterDropdown.contains(event.target) && !filterButton.contains(event.target)) {
+    filterDropdown.classList.add('hidden');
+  }
+});
+
 
 cargarContenidoPrincipal();

@@ -15,7 +15,56 @@
     <main>
         <div class="search-wrapper">
             <input id="searchInput" type="search" placeholder="Busca un anime..." autocomplete="off" />
+            <button id="filterButton" class="filter-btn" aria-label="Filtrar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 18h4v-2h-4v2zm-7-9v2h18v-2H3zm3-5v2h12V4H6z" />
+                </svg>
+            </button>
+            <div id="filterDropdown" class="filter-dropdown hidden">
+                <div class="genres-list">
+                    <label><input type="checkbox" name="genre" value="action" /> Acción</label>
+                    <label><input type="checkbox" name="genre" value="adventure" /> Aventura</label>
+                    <label><input type="checkbox" name="genre" value="cars" /> Coches</label>
+                    <label><input type="checkbox" name="genre" value="comedy" /> Comedia</label>
+                    <label><input type="checkbox" name="genre" value="dementia" /> Demencia</label>
+                    <label><input type="checkbox" name="genre" value="demons" /> Demonios</label>
+                    <label><input type="checkbox" name="genre" value="mystery" /> Misterio</label>
+                    <label><input type="checkbox" name="genre" value="drama" /> Drama</label>
+                    <label><input type="checkbox" name="genre" value="ecchi" /> Ecchi</label>
+                    <label><input type="checkbox" name="genre" value="fantasy" /> Fantasía</label>
+                    <label><input type="checkbox" name="genre" value="game" /> Juegos</label>
+                    <label><input type="checkbox" name="genre" value="hentai" /> Hentai</label>
+                    <label><input type="checkbox" name="genre" value="historical" /> Histórico</label>
+                    <label><input type="checkbox" name="genre" value="horror" /> Terror</label>
+                    <label><input type="checkbox" name="genre" value="kids" /> Infantil</label>
+                    <label><input type="checkbox" name="genre" value="magic" /> Magia</label>
+                    <label><input type="checkbox" name="genre" value="martial-arts" /> Artes marciales</label>
+                    <label><input type="checkbox" name="genre" value="mecha" /> Mecha</label>
+                    <label><input type="checkbox" name="genre" value="music" /> Música</label>
+                    <label><input type="checkbox" name="genre" value="parody" /> Parodia</label>
+                    <label><input type="checkbox" name="genre" value="samurai" /> Samurái</label>
+                    <label><input type="checkbox" name="genre" value="romance" /> Romance</label>
+                    <label><input type="checkbox" name="genre" value="school" /> Escolar</label>
+                    <label><input type="checkbox" name="genre" value="sci-fi" /> Ciencia ficción</label>
+                    <label><input type="checkbox" name="genre" value="shoujo" /> Shoujo</label>
+                    <label><input type="checkbox" name="genre" value="shoujo-ai" /> Shoujo Ai</label>
+                    <label><input type="checkbox" name="genre" value="shounen" /> Shounen</label>
+                    <label><input type="checkbox" name="genre" value="shounen-ai" /> Shounen Ai</label>
+                    <label><input type="checkbox" name="genre" value="slice-of-life" /> Slice of Life</label>
+                    <label><input type="checkbox" name="genre" value="space" /> Espacial</label>
+                    <label><input type="checkbox" name="genre" value="sports" /> Deportes</label>
+                    <label><input type="checkbox" name="genre" value="super-power" /> Superpoderes</label>
+                    <label><input type="checkbox" name="genre" value="vampire" /> Vampiros</label>
+                    <label><input type="checkbox" name="genre" value="yaoi" /> Yaoi</label>
+                    <label><input type="checkbox" name="genre" value="yuri" /> Yuri</label>
+                    <label><input type="checkbox" name="genre" value="harem" /> Harem</label>
+                    <label><input type="checkbox" name="genre" value="seinen" /> Seinen</label>
+                    <label><input type="checkbox" name="genre" value="josei" /> Josei</label>
+                </div>
+                <button id="applyFilters" class="apply-btn">Aplicar filtros</button>
+            </div>
         </div>
+
 
         <div id="loading">Buscando...</div>
         <div id="results"></div>

@@ -44,7 +44,7 @@ function setupLogout() {
 
 
 /**
- * Configura el comportamiento del modal (abrir/cerrar).
+ * Configura el comportamiento del modal de edición de perfil.
  */
 function setupModalHandlers() {
     const uploadBtn = document.getElementById('uploadProfilePicBtn');
@@ -179,16 +179,12 @@ function setupFormSubmission() {
                 localStorage.setItem('email', newEmail);
                 localStorage.setItem('birthday', newBirthday);
 
-                finalizarActualizacion();
+                modal.style.display = 'none';
+                renderUserData();
             }
         } catch (error) {
             formMessage.textContent = 'Error al actualizar perfil: ' + error.message;
             formMessage.style.display = 'block';
-        }
-
-        function finalizarActualizacion() {
-            modal.style.display = 'none';
-            renderUserData();
         }
     });
 }

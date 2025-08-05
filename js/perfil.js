@@ -43,7 +43,6 @@ function setupLogout() {
 }
 
 
-
 /**
  * Configura el comportamiento del modal (abrir/cerrar).
  */
@@ -63,7 +62,6 @@ function setupModalHandlers() {
 
         // Rellenar email actual
         const currentEmail = localStorage.getItem('email') || '';
-        console.log('Email desde localStorage:', currentEmail);
         document.getElementById('emailInput').value = currentEmail;
 
         // Rellenar birthday actual

@@ -2,11 +2,11 @@ let paginaActual = 1;
 let totalPaginas = null;
 let primeraCarga = true;
 
-// Cache para guardar los datos ya obtenidos por página
 const cacheAnimesPorPagina = {};
 
 
-async function fetchConRetry(url, retries = 3, delayMs = 2000) {
+async function fetchConRetry(url, delayMs = 2000) {
+  const retries = 3; // 3 reintentos
   for (let i = 0; i <= retries; i++) {
     const resp = await fetch(url);
     if (resp.status === 429) {
@@ -45,7 +45,6 @@ async function obtenerAnimesPorPagina(pagina) {
       }
 
       totalPaginas = lastVisible;
-      console.log("Total páginas reales detectadas:", totalPaginas);
     }
 
     if (pagina > totalPaginas) {
@@ -56,8 +55,6 @@ async function obtenerAnimesPorPagina(pagina) {
 
     // Comprobar si ya tenemos cache para esta página
     if (cacheAnimesPorPagina[pagina]) {
-      console.log(`Usando cache para página ${pagina}`);
-      console.log(cacheAnimesPorPagina[pagina]);
       paginaActual = pagina;
       mostrarAnimes(cacheAnimesPorPagina[pagina]);
       crearPaginacion();

@@ -14,7 +14,13 @@ const registerForm = document.getElementById('registerForm');
 const filterButton = document.getElementById('filterButton');
 const filterDropdown = document.getElementById('filterDropdown');
 
+const results = document.getElementById('results');
+const latestReleases = document.getElementById('latestReleases');
+const genreSections = document.getElementById('genreSections');
+const upcomingReleases = document.getElementById('upcomingReleases');
+
 let selectedGenres = [];
+let timeoutId = null;
 
 // Para la pantalla de inicio
 const generos = new Map([
@@ -26,7 +32,7 @@ const generos = new Map([
 ]);
 
 // Para la búsqueda
-const genreMap = { 
+const genreMap = {
     "action": 1,
     "adventure": 2,
     "cars": 3,
@@ -72,22 +78,6 @@ const genreMap = {
     "josei": 43
 };
 
-const results = document.getElementById('results');
-const latestReleases = document.getElementById('latestReleases');
-const genreSections = document.getElementById('genreSections');
-const upcomingReleases = document.getElementById('upcomingReleases');
-
-let timeoutId = null;
-
-// Genera un slug a partir del título
-function generarSlug(titulo) {
-    return titulo
-        .toLowerCase()
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // elimina acentos
-        .replace(/[^a-z0-9\s-]/g, "")  // elimina caracteres no alfanuméricos
-        .trim()
-        .replace(/\s+/g, "-");  // reemplaza espacios por guiones
-}
 
 
 async function mostrarProximosLanzamientos() {
@@ -118,7 +108,6 @@ async function mostrarGeneros() {
 
     for (const [genero, genreId] of generos.entries()) {
         try {
-            console.log(`Solicitando datos para género: ${genero} (ID: ${genreId})`);
             const response = await fetch(`https://api.jikan.moe/v4/anime?genres=${genreId}&order_by=popularity&sort=asc&limit=15`);
 
             if (!response.ok) {
@@ -316,7 +305,6 @@ async function buscarAnime(query = '', genres = []) {
 }
 
 
-// Código modales login y registro
 if (perfilLink) {
     perfilLink.addEventListener('click', (e) => {
         const loggedIn = localStorage.getItem('loggedIn');
@@ -330,6 +318,8 @@ if (perfilLink) {
     });
 }
 
+
+// LOGIN
 if (closeModal) {
     closeModal.addEventListener('click', () => {
         loginModal.style.display = 'none';
@@ -354,31 +344,6 @@ window.addEventListener('click', (event) => {
     }
 });
 
-if (registerLink) {
-    registerLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (loginModal) loginModal.style.display = 'none';
-        if (registerModal) registerModal.style.display = 'block';
-    });
-}
-
-if (closeRegisterModal) {
-    closeRegisterModal.addEventListener('click', () => {
-        if (registerModal) registerModal.style.display = 'none';
-        if (registerForm) registerForm.reset();
-        document.querySelectorAll("#registerModal .error-message").forEach(el => el.textContent = "");
-    });
-}
-
-
-window.addEventListener('click', (event) => {
-    if (event.target === registerModal) {
-        registerModal.style.display = 'none';
-        registerForm.reset();
-        document.querySelectorAll("#registerModal .error-message").forEach(el => el.textContent = "");
-    }
-});
-
 if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -400,7 +365,6 @@ if (loginForm) {
             });
 
             const result = await response.json();
-            console.log("Resultado login:", result);
 
             if (result.success) {
                 loginModal.style.display = "none";
@@ -422,24 +386,31 @@ if (loginForm) {
     });
 }
 
-function tiene18anos(birthday) {
-    if (!birthday) return false;
 
-    const fechaNacimiento = new Date(birthday);
-    const hoy = new Date();
-
-    let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
-    const mesDiff = hoy.getMonth() - fechaNacimiento.getMonth();
-    const diaDiff = hoy.getDate() - fechaNacimiento.getDate();
-
-    // Ajustar edad si no ha cumplido años este año
-    if (mesDiff < 0 || (mesDiff === 0 && diaDiff < 0)) {
-        edad--;
-    }
-
-    return edad >= 18;
+// REGISTRO
+if (registerLink) {
+    registerLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (loginModal) loginModal.style.display = 'none';
+        if (registerModal) registerModal.style.display = 'block';
+    });
 }
 
+if (closeRegisterModal) {
+    closeRegisterModal.addEventListener('click', () => {
+        if (registerModal) registerModal.style.display = 'none';
+        if (registerForm) registerForm.reset();
+        document.querySelectorAll("#registerModal .error-message").forEach(el => el.textContent = "");
+    });
+}
+
+window.addEventListener('click', (event) => {
+    if (event.target === registerModal) {
+        registerModal.style.display = 'none';
+        registerForm.reset();
+        document.querySelectorAll("#registerModal .error-message").forEach(el => el.textContent = "");
+    }
+});
 
 if (registerForm) {
     registerForm.addEventListener("submit", async (e) => {
@@ -499,7 +470,6 @@ if (registerForm) {
             });
 
             const result = await response.json();
-            console.log("Respuesta registro:", result);
 
             if (result.success) {
                 localStorage.setItem('loggedIn', 'true');
@@ -519,37 +489,55 @@ if (registerForm) {
 }
 
 
+function tiene18anos(birthday) {
+    if (!birthday) return false;
+
+    const fechaNacimiento = new Date(birthday);
+    const hoy = new Date();
+
+    let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+    const mesDiff = hoy.getMonth() - fechaNacimiento.getMonth();
+    const diaDiff = hoy.getDate() - fechaNacimiento.getDate();
+
+    // Ajustar edad si no ha cumplido años este año
+    if (mesDiff < 0 || (mesDiff === 0 && diaDiff < 0)) {
+        edad--;
+    }
+
+    return edad >= 18;
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
+    // Código para menú hamburguesa
     const hamburger = document.getElementById("hamburger");
     const navLinks = document.getElementById("mobileMenu");
 
     if (hamburger && navLinks) {
-        // Toggle del menú al hacer clic en el botón hamburguesa
         hamburger.addEventListener("click", (e) => {
-            e.stopPropagation(); // Previene que el click llegue al document
+            e.stopPropagation();
             navLinks.classList.toggle("active");
         });
 
-        // Previene el cierre si se hace clic dentro del menú
         navLinks.addEventListener("click", (e) => {
             e.stopPropagation();
         });
 
-        // Cierra el menú si se hace clic fuera de él
         document.addEventListener("click", () => {
             navLinks.classList.remove("active");
         });
     }
-});
 
-document.addEventListener('DOMContentLoaded', () => {
+    // Código para mostrar/ocultar el enlace favoritos
     const favoritosLink = document.getElementById('favoritosLink');
     const loggedInUser = localStorage.getItem('username');
 
-    if (loggedInUser) {
-        favoritosLink.style.display = 'block';
-    } else {
-        favoritosLink.style.display = 'none';
+    if (favoritosLink) {
+        if (loggedInUser) {
+            favoritosLink.style.display = 'block';
+        } else {
+            favoritosLink.style.display = 'none';
+        }
     }
 });
 
@@ -564,6 +552,7 @@ async function cargarContenidoPrincipal() {
 }
 
 
+// FILTROS
 filterButton.addEventListener('click', () => {
     filterDropdown.classList.toggle('hidden');
 });
@@ -601,7 +590,6 @@ document.getElementById("applyFilters").addEventListener("click", async () => {
 
     buscarAnime(query, selectedGenres);
 });
-
 
 
 cargarContenidoPrincipal();

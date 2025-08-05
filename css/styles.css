@@ -207,7 +207,6 @@ main {
   margin-bottom: 12px;
 }
 
-
 .search-results h3 {
   font-size: 1rem;
   font-weight: 600;
@@ -559,7 +558,7 @@ button:hover {
 @media (max-width: 600px) {
   header {
     height: 70px;
-    min-height: 120px;
+    min-height: 90px;
     padding: 1rem 1rem 1.5rem 1rem;
   }
 
@@ -576,6 +575,20 @@ button:hover {
     border: 2px solid #f06292;
     background-color: #121212;
     z-index: 2000;
+  }
+
+  .search-wrapper {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+    padding: 0 10px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: -10px;
+    position: relative;
   }
 
   .genres-wrapper {
@@ -612,10 +625,6 @@ button:hover {
 
   .card:hover {
     transform: none !important;
-  }
-
-  body {
-    padding-top: 20px;
   }
 
   .logo {
@@ -688,7 +697,7 @@ button:hover {
     margin-left: auto;
     padding-top: 20px;
     padding-right: 20px;
-    width: 180px;
+    width: 50px;
     text-align: right;
     z-index: 20;
     position: relative;
@@ -698,7 +707,7 @@ button:hover {
     width: 150px;
     background-color: #222;
     position: absolute;
-    top: 100px;
+    top: 90px;
     right: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     border-radius: 4px;

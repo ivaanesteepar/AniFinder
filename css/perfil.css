@@ -439,6 +439,11 @@ h1 {
     color: #ffffff;
 }
 
+.nav-links li a.active {
+    color: #f06292;
+    font-weight: bold;
+}
+
 
 
 

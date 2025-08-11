@@ -76,39 +76,39 @@ main {
 
 #paginacion {
   display: flex;
-  justify-content: center; 
-  gap: 10px;               
-  margin-top: 20px;   
-  margin-bottom: 20px;     
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 #paginacion button.activo {
-  background-color: #fdeef4; 
-  color: #880e4f;     
+  background-color: #fdeef4;
+  color: #880e4f;
   cursor: default;
   font-weight: bold;
   border: none;
-  box-shadow: 0 0 5px #f8bbd0; 
+  box-shadow: 0 0 5px #f8bbd0;
 }
 
 .anime-card img {
   width: 80px;
-  height: 120px;      
-  object-fit: cover;   
+  height: 120px;
+  object-fit: cover;
   border-radius: 5px;
   flex-shrink: 0;
 }
 
 #spinner {
-  display: none;        
-  position: fixed;      
-  top: 50%;             
-  left: 50%;            
-  transform: translate(-50%, -50%); 
-  z-index: 9999;      
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .loader {
@@ -122,8 +122,13 @@ main {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .anime-info {
@@ -158,10 +163,10 @@ main {
 }
 
 .anime-card-link {
-  text-decoration: none; 
-  color: inherit;       
-  cursor: pointer;       
-  display: inline-block; 
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  display: inline-block;
 }
 
 .footer-links a:hover img {
@@ -482,6 +487,13 @@ button {
 .hamburger {
   display: none;
 }
+
+.nav-links li a.active {
+  color: #f06292;
+  font-weight: bold;
+}
+
+
 
 
 @media (max-width: 600px) {

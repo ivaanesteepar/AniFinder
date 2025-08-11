@@ -44,7 +44,7 @@ const genreMap = {
     "ecchi": 9,
     "fantasy": 10,
     "game": 11,
-    "hentai": 12,
+    //"hentai": 12,
     "historical": 13,
     "horror": 14,
     "kids": 15,
@@ -78,6 +78,12 @@ const genreMap = {
     "josei": 43
 };
 
+function filtrarHentai(animes) {
+    return animes.filter(anime => {
+        if (!anime.genres) return true;
+        return !anime.genres.some(g => g.mal_id === 12);
+    });
+}
 
 
 async function mostrarProximosLanzamientos() {
@@ -91,17 +97,17 @@ async function mostrarProximosLanzamientos() {
         const data = await response.json();
 
         if (data.data && data.data.length > 0) {
-            // Filtrar duplicados
-            const animesUnicos = eliminarDuplicados(data.data).slice(0, 10);
+            let animesUnicos = eliminarDuplicados(data.data);
+            animesUnicos = filtrarHentai(animesUnicos); // filtrar hentai
+            animesUnicos = animesUnicos.slice(0, 10);
             crearSeccionGenero('Próximos lanzamientos', animesUnicos, upcomingReleases);
         } else {
-            console.log("No se han encontrado datos de próximos lanzamientos")
+            console.log("No se han encontrado datos de próximos lanzamientos");
         }
     } catch (error) {
         console.error('Error al cargar próximos lanzamientos:', error);
     }
 }
-
 
 async function mostrarGeneros() {
     genreSections.innerHTML = '';
@@ -186,12 +192,13 @@ async function mostrarUltimosLanzamientos() {
         const data = await response.json();
 
         if (data.data && data.data.length > 0) {
-            const animesUnicos = eliminarDuplicados(data.data);
+            let animesUnicos = eliminarDuplicados(data.data);
+            animesUnicos = filtrarHentai(animesUnicos); // filtrar hentai
             const animesFinales = animesUnicos.slice(0, 10);
             latestReleases.innerHTML = ''; // limpia mensaje de carga
             crearSeccionGenero(`Últimos lanzamientos`, animesFinales, latestReleases);
         } else {
-            console.log("No se han encontrado datos de últimos lanzamientos")
+            console.log("No se han encontrado datos de últimos lanzamientos");
         }
     } catch (error) {
         console.error("Error al cargar últimos lanzamientos:", error);
@@ -259,7 +266,10 @@ async function buscarAnime(query = '', genres = []) {
         }
 
         // Filtrar géneros válidos (números)
-        const genreNums = genres.filter(g => !isNaN(parseInt(g)));
+        let genreNums = genres.filter(g => !isNaN(parseInt(g)));
+
+        // Filtrar hentai si estuviera (por si acaso)
+        genreNums = genreNums.filter(id => id !== 12);
 
         if (genreNums.length > 0) {
             params.push(`genres=${genreNums.join(',')}`);
@@ -277,9 +287,10 @@ async function buscarAnime(query = '', genres = []) {
             return;
         }
 
-        results.innerHTML = '';
-        const animesUnicos = eliminarDuplicados(data.data);
+        let animesUnicos = eliminarDuplicados(data.data);
+        animesUnicos = filtrarHentai(animesUnicos); // filtrar hentai
 
+        results.innerHTML = '';
         animesUnicos.forEach(anime => {
             const title = anime.title_english || anime.title || anime.title_japanese || 'Sin título';
             const year = anime.aired?.from ? new Date(anime.aired.from).getFullYear() : 'N/A';

@@ -44,7 +44,7 @@ const genreMap = {
     "ecchi": 9,
     "fantasy": 10,
     "game": 11,
-    //"hentai": 12,
+    "hentai": 12,
     "historical": 13,
     "horror": 14,
     "kids": 15,
@@ -78,7 +78,8 @@ const genreMap = {
     "josei": 43
 };
 
-function filtrarHentai(animes) {
+function filtrarHentai(animes, permitirHentai = false) {
+    if (permitirHentai) return animes;  // Si puede ver hentai, no filtrar
     return animes.filter(anime => {
         if (!anime.genres) return true;
         return !anime.genres.some(g => g.mal_id === 12);
@@ -98,7 +99,8 @@ async function mostrarProximosLanzamientos() {
 
         if (data.data && data.data.length > 0) {
             let animesUnicos = eliminarDuplicados(data.data);
-            animesUnicos = filtrarHentai(animesUnicos); // filtrar hentai
+            let esMayorEdad = localStorage.getItem("esMayorEdad") === "true";
+            animesUnicos = filtrarHentai(animesUnicos, esMayorEdad); // filtrar hentai
             animesUnicos = animesUnicos.slice(0, 10);
             crearSeccionGenero('Próximos lanzamientos', animesUnicos, upcomingReleases);
         } else {
@@ -193,7 +195,8 @@ async function mostrarUltimosLanzamientos() {
 
         if (data.data && data.data.length > 0) {
             let animesUnicos = eliminarDuplicados(data.data);
-            animesUnicos = filtrarHentai(animesUnicos); // filtrar hentai
+            let esMayorEdad = localStorage.getItem("esMayorEdad") === "true";
+            animesUnicos = filtrarHentai(animesUnicos, esMayorEdad);
             const animesFinales = animesUnicos.slice(0, 10);
             latestReleases.innerHTML = ''; // limpia mensaje de carga
             crearSeccionGenero(`Últimos lanzamientos`, animesFinales, latestReleases);
@@ -288,7 +291,8 @@ async function buscarAnime(query = '', genres = []) {
         }
 
         let animesUnicos = eliminarDuplicados(data.data);
-        animesUnicos = filtrarHentai(animesUnicos); // filtrar hentai
+        let esMayorEdad = localStorage.getItem("esMayorEdad") === "true";
+        animesUnicos = filtrarHentai(animesUnicos, esMayorEdad);
 
         results.innerHTML = '';
         animesUnicos.forEach(anime => {
@@ -359,39 +363,25 @@ if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
+        const email = loginForm.email.value.trim();
+        const password = loginForm.password.value.trim();
+
         const errorDiv = document.getElementById("loginErrorMessage");
         errorDiv.style.display = "none";
         errorDiv.textContent = "";
 
-        const email = loginForm.email.value.trim();
-        const password = loginForm.password.value.trim();
+        const loginResult = await loginUser(email, password);
 
-        try {
-            const response = await fetch("https://web-production-62dc.up.railway.app/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ email, password })
-            });
+        if (loginResult.success) {
+            loginModal.style.display = "none";
+            localStorage.setItem('loggedIn', 'true');
+            if (loginResult.userData.username) localStorage.setItem('username', loginResult.userData.username);
+            if (loginResult.userData.email) localStorage.setItem('email', loginResult.userData.email);
 
-            const result = await response.json();
-
-            if (result.success) {
-                loginModal.style.display = "none";
-                localStorage.setItem('loggedIn', 'true');
-                if (result.username) localStorage.setItem('username', result.username);
-                if (result.email) localStorage.setItem('email', result.email);
-
-                window.location.href = "../pages/perfil.html";
-            } else {
-                errorDiv.textContent = result.message || "Error en el inicio de sesión.";
-                errorDiv.style.display = "block";
-            }
-
-        } catch (error) {
-            console.error("Error al intentar iniciar sesión:", error);
-            errorDiv.textContent = "Error al conectar con el servidor.";
+            // Redirigir a perfil
+            window.location.href = "../pages/perfil.html";
+        } else {
+            errorDiv.textContent = loginResult.message || "Error en el inicio de sesión.";
             errorDiv.style.display = "block";
         }
     });
@@ -519,6 +509,33 @@ function tiene18anos(birthday) {
 }
 
 
+async function loginUser(email, password) {
+    try {
+        const response = await fetch("/login", {
+            method: "POST",
+            body: JSON.stringify({ email, password }),
+            headers: { "Content-Type": "application/json" },
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            const esMayorEdad = tiene18anos(data.birthday);
+            localStorage.setItem("esMayorEdad", String(esMayorEdad));
+            mostrarAnimes(esMayorEdad);
+
+            return { success: true, esMayorEdad, userData: data };
+        } else {
+            alert(data.message);
+            return { success: false, message: data.message };
+        }
+    } catch (error) {
+        console.error("Error en login:", error);
+        return { success: false, message: "Error en la conexión" };
+    }
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
     // Código para menú hamburguesa
     const hamburger = document.getElementById("hamburger");
@@ -577,11 +594,23 @@ document.addEventListener('click', (event) => {
 document.getElementById("applyFilters").addEventListener("click", async () => {
     const query = document.getElementById("searchInput").value.trim();
 
-    selectedGenres = Array.from(document.querySelectorAll('input[name="genre"]:checked'))
+    const selectedGenres = Array.from(document.querySelectorAll('input[name="genre"]:checked'))
         .map(cb => genreMap[cb.value])
         .filter(id => id !== undefined);
 
     const resultsContainer = document.getElementById("results");
+
+    // Leer si es mayor de edad del localStorage
+    const esMayorEdad = localStorage.getItem("esMayorEdad") === "true";
+
+    if (!esMayorEdad && selectedGenres.includes(12)) {
+        resultsContainer.innerHTML = "<p>No puedes buscar contenido hentai si no eres mayor de edad.</p>";
+        loading.style.display = 'none';
+        document.getElementById("latestReleases").style.display = "none";
+        document.getElementById("upcomingReleases").style.display = "none";
+        document.getElementById("genreSections").style.display = "none";
+        return;
+    }
 
     if (selectedGenres.length === 0 && query === '') {
         resultsContainer.innerHTML = "";

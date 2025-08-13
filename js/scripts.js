@@ -600,7 +600,6 @@ document.getElementById("applyFilters").addEventListener("click", async () => {
 
     const resultsContainer = document.getElementById("results");
 
-    // Leer si es mayor de edad del localStorage
     const esMayorEdad = localStorage.getItem("esMayorEdad") === "true";
 
     if (!esMayorEdad && selectedGenres.includes(12)) {
@@ -609,6 +608,7 @@ document.getElementById("applyFilters").addEventListener("click", async () => {
         document.getElementById("latestReleases").style.display = "none";
         document.getElementById("upcomingReleases").style.display = "none";
         document.getElementById("genreSections").style.display = "none";
+        filterDropdown.classList.add('hidden');
         return;
     }
 
@@ -617,6 +617,7 @@ document.getElementById("applyFilters").addEventListener("click", async () => {
         document.getElementById("latestReleases").style.display = "block";
         document.getElementById("upcomingReleases").style.display = "block";
         document.getElementById("genreSections").style.display = "block";
+        filterDropdown.classList.add('hidden'); 
         return;
     }
 
@@ -629,7 +630,8 @@ document.getElementById("applyFilters").addEventListener("click", async () => {
     loading.style.display = 'block';
 
     buscarAnime(query, selectedGenres);
-});
 
+    filterDropdown.classList.add('hidden');
+});
 
 cargarContenidoPrincipal();

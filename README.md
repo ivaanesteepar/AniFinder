@@ -19,12 +19,12 @@ Buscador web de anime que utiliza la API pública de **Jikan** para mostrar resu
 
 ## Cómo usar
 
-### Usando la versión online
+### Opción 1: Ejecutar online
 
-1. Accede a la aplicación en:  
-   [https://web-production-62dc.up.railway.app](https://web-production-62dc.up.railway.app)  
+Accede directamente a la aplicación en el siguiente enlace:  
+👉 [AniFinder en GitHub Pages](https://ivaanesteepar.github.io/AniFinder/)
 
-### Usando la versión local
+### Opción 2: Ejecutar en local
 
 1. Clona o descarga este repositorio.
    

@@ -93,16 +93,36 @@ async function mostrarProximosLanzamientos() {
     try {
         const hoy = new Date();
         const hoyISO = hoy.toISOString().split('T')[0]; // YYYY-MM-DD
+        let animesUnicos = [];
+        let page = 1;
 
-        const response = await fetch(`https://api.jikan.moe/v4/anime?start_date=${hoyISO}&order_by=start_date&sort=asc&limit=15`);
-        const data = await response.json();
+        // bucle hasta conseguir al menos 10 animes
+        while (animesUnicos.length < 10) {
+            const response = await fetch(`https://api.jikan.moe/v4/anime?start_date=${hoyISO}&order_by=start_date&sort=asc&limit=25&page=${page}`);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
 
-        if (data.data && data.data.length > 0) {
-            let animesUnicos = eliminarDuplicados(data.data);
+            if (!data.data || data.data.length === 0) break; // no hay más resultados
+
             let esMayorEdad = localStorage.getItem("esMayorEdad") === "true";
-            animesUnicos = filtrarHentai(animesUnicos, esMayorEdad); // filtrar hentai
-            animesUnicos = animesUnicos.slice(0, 10);
-            crearSeccionGenero('Próximos lanzamientos', animesUnicos, upcomingReleases);
+            let nuevos = eliminarDuplicados(data.data);
+            nuevos = filtrarHentai(nuevos, esMayorEdad);
+
+            // Añadir solo los que aún no están
+            nuevos.forEach(anime => {
+                if (animesUnicos.length < 10 && !animesUnicos.some(a => a.mal_id === anime.mal_id)) {
+                    animesUnicos.push(anime);
+                }
+            });
+
+            // si ya tenemos 10, salimos
+            if (animesUnicos.length >= 10) break;
+
+            page++; // ir a la siguiente página
+        }
+
+        if (animesUnicos.length > 0) {
+            crearSeccionGenero('Próximos lanzamientos', animesUnicos.slice(0, 10), upcomingReleases);
         } else {
             console.log("No se han encontrado datos de próximos lanzamientos");
         }
@@ -110,6 +130,7 @@ async function mostrarProximosLanzamientos() {
         console.error('Error al cargar próximos lanzamientos:', error);
     }
 }
+
 
 async function mostrarGeneros() {
     genreSections.innerHTML = '';

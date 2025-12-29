@@ -2,7 +2,7 @@
   <img src="/img/logo_app.png" alt="App logo" width="500" height="500">
 </div>
 
-![En desarrollo](https://img.shields.io/badge/status-work_in_progress-yellow?style=for-the-badge&logo=github)
+![On Hold](https://img.shields.io/badge/status-on_hold-lightgrey?style=for-the-badge&logo=github)
 ![Backend offline](https://img.shields.io/badge/backend-offline-red?style=for-the-badge)
 
 Buscador web de anime que utiliza la API pública de **Jikan** para mostrar resultados en tiempo real. Permite buscar títulos de anime y redirige a la página oficial de **MyAnimeList** para ver detalles de cada anime.

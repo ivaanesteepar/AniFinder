@@ -24,7 +24,7 @@ Buscador web de anime que utiliza la API pública de **Jikan** para mostrar resu
 ### Opción 1: Ejecutar online
 
 Accede directamente a la aplicación en el siguiente enlace:  
-👉 [AniFinder en GitHub Pages](https://ivaanesteepar.github.io/AniFinder/)
+[AniFinder](https://ivaanesteepar.github.io/AniFinder/)
 
 ### Opción 2: Ejecutar en local
 

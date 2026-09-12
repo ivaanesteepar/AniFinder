@@ -9,7 +9,7 @@
 Buscador web de anime que utiliza la API pública de **Jikan** para mostrar resultados en tiempo real. Permite buscar títulos de anime y redirige a la página oficial de **MyAnimeList** para ver detalles de cada anime.
 
 > **Nota**: Esta herramienta ha sido creada principalmente para uso personal, pero la comparto públicamente para que pueda ser útil a otras personas interesadas.  
-> ⚠️ **El backend actualmente no funciona**, ya que no he encontrado un hosting gratuito adecuado para desplegarlo.
+> ⚠️ Actualmente, el backend no está desplegado y la API de Jikan que utilizaba el proyecto ya no funciona, por lo que algunas funcionalidades pueden no estar operativas.
 
 ## Características
 

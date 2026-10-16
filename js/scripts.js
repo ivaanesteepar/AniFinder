@@ -1,18 +1,9 @@
 const input = document.getElementById('searchInput');
 const loading = document.getElementById('loading');
 
-const perfilLink = document.getElementById('perfilLink');
-const loginModal = document.getElementById('loginModal');
-const closeModal = document.getElementById('closeModal');
-const loginForm = document.getElementById('loginForm');
-
-const registerLink = document.getElementById('registerLink');
-const registerModal = document.getElementById('registerModal');
-const closeRegisterModal = document.getElementById('closeRegisterModal');
-const registerForm = document.getElementById('registerForm');
-
 const filterButton = document.getElementById('filterButton');
 const filterDropdown = document.getElementById('filterDropdown');
+const clearFiltersButton = document.getElementById('clearFiltersButton');
 
 const results = document.getElementById('results');
 const latestReleases = document.getElementById('latestReleases');
@@ -78,8 +69,7 @@ const genreMap = {
     "josei": 43
 };
 
-function filtrarHentai(animes, permitirHentai = false) {
-    if (permitirHentai) return animes;  // Si puede ver hentai, no filtrar
+function filtrarHentai(animes) {
     return animes.filter(anime => {
         if (!anime.genres) return true;
         return !anime.genres.some(g => g.mal_id === 12);
@@ -98,15 +88,13 @@ async function mostrarProximosLanzamientos() {
 
         // bucle hasta conseguir al menos 10 animes
         while (animesUnicos.length < 10) {
-            const response = await fetch(`https://api.jikan.moe/v4/anime?start_date=${hoyISO}&order_by=start_date&sort=asc&limit=25&page=${page}`);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const response = await AniFinderAPI.fetchAnimeApi(`https://api.tenrai.org/v1/anime?start_date=${hoyISO}&order_by=start_date&sort=asc&limit=25&page=${page}`);
             const data = await response.json();
 
             if (!data.data || data.data.length === 0) break; // no hay más resultados
 
-            let esMayorEdad = localStorage.getItem("esMayorEdad") === "true";
             let nuevos = eliminarDuplicados(data.data);
-            nuevos = filtrarHentai(nuevos, esMayorEdad);
+            nuevos = filtrarHentai(nuevos);
 
             // Añadir solo los que aún no están
             nuevos.forEach(anime => {
@@ -133,36 +121,36 @@ async function mostrarProximosLanzamientos() {
 
 
 async function mostrarGeneros() {
-    genreSections.innerHTML = '';
+    genreSections.innerHTML = `
+        <div class="genre-loading" role="status" aria-live="polite">
+            <span class="genre-loading-spinner" aria-hidden="true"></span>
+            <span>Cargando géneros...</span>
+        </div>
+    `;
 
-    for (const [genero, genreId] of generos.entries()) {
+    const resultados = await Promise.all(Array.from(generos.entries(), async ([genero, genreId]) => {
         try {
-            const response = await fetch(`https://api.jikan.moe/v4/anime?genres=${genreId}&order_by=popularity&sort=asc&limit=15`);
-
-            if (!response.ok) {
-                throw new Error(`Error ${response.status} en género ${genero}`);
-            }
-
+            const response = await AniFinderAPI.fetchAnimeApi(`https://api.tenrai.org/v1/anime?genres=${genreId}&order_by=popularity&sort=asc&limit=15`);
             const data = await response.json();
-            if (data.data && data.data.length > 0) {
-                const animesFiltrados = data.data.filter(anime => anime.popularity > 0).slice(0, 10);
-
-                if (animesFiltrados.length > 0) {
-                    crearSeccionGenero(genero, animesFiltrados, genreSections);
-                } else {
-                    console.log(`No hay animes con popularidad > 0 para el género: ${genero}`);
-                }
-            } else {
-                console.log(`No hay resultados para el género: ${genero}`);
-            }
-
+            const animesFiltrados = (data.data || [])
+                .filter(anime => anime.popularity > 0)
+                .slice(0, 10);
+            return { genero, animes: animesFiltrados };
         } catch (error) {
             console.error(`Error al cargar ${genero}:`, error);
+            return { genero, animes: [] };
         }
+    }));
 
-        // Espera 1 segundo para no saturar la API
-        await new Promise(resolve => setTimeout(resolve, 1000));
-    }
+    const filas = document.createDocumentFragment();
+    resultados.forEach(({ genero, animes }) => {
+        if (animes.length > 0) {
+            crearSeccionGenero(genero, animes, filas);
+        } else {
+            console.log(`No hay resultados para el género: ${genero}`);
+        }
+    });
+    genreSections.replaceChildren(filas);
 }
 
 
@@ -209,15 +197,13 @@ async function mostrarUltimosLanzamientos() {
         const startDate = `${yearActual}-01-01`;
         const endDate = hoy.toISOString().split('T')[0];
 
-        const response = await fetch(`https://api.jikan.moe/v4/anime?start_date=${startDate}&end_date=${endDate}&order_by=start_date&sort=desc&limit=20`);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const response = await AniFinderAPI.fetchAnimeApi(`https://api.tenrai.org/v1/anime?start_date=${startDate}&end_date=${endDate}&order_by=start_date&sort=desc&limit=20`);
 
         const data = await response.json();
 
         if (data.data && data.data.length > 0) {
             let animesUnicos = eliminarDuplicados(data.data);
-            let esMayorEdad = localStorage.getItem("esMayorEdad") === "true";
-            animesUnicos = filtrarHentai(animesUnicos, esMayorEdad);
+            animesUnicos = filtrarHentai(animesUnicos);
             const animesFinales = animesUnicos.slice(0, 10);
             latestReleases.innerHTML = ''; // limpia mensaje de carga
             crearSeccionGenero(`Últimos lanzamientos`, animesFinales, latestReleases);
@@ -282,27 +268,25 @@ if (input) {
 
 async function buscarAnime(query = '', genres = []) {
     try {
-        const baseUrl = 'https://api.jikan.moe/v4/anime?limit=24';
+        const baseUrl = 'https://api.tenrai.org/v1/anime?limit=24';
         const params = [];
 
         if (query.trim().length > 0) {
             params.push(`q=${encodeURIComponent(query)}`);
         }
 
-        // Filtrar géneros válidos (números)
-        let genreNums = genres.filter(g => !isNaN(parseInt(g)));
-
-        // Filtrar hentai si estuviera (por si acaso)
-        genreNums = genreNums.filter(id => id !== 12);
+        const genreNums = genres
+            .map(g => Number.parseInt(g, 10))
+            .filter(id => Number.isInteger(id) && id !== 12);
 
         if (genreNums.length > 0) {
             params.push(`genres=${genreNums.join(',')}`);
-            params.push('genres_exclude=0');
         }
+        params.push('genres_exclude=12');
 
         const url = params.length > 0 ? `${baseUrl}&${params.join('&')}` : baseUrl;
 
-        const response = await fetch(url);
+        const response = await AniFinderAPI.fetchAnimeApi(url);
         const data = await response.json();
 
         if (!data.data || data.data.length === 0) {
@@ -312,8 +296,7 @@ async function buscarAnime(query = '', genres = []) {
         }
 
         let animesUnicos = eliminarDuplicados(data.data);
-        let esMayorEdad = localStorage.getItem("esMayorEdad") === "true";
-        animesUnicos = filtrarHentai(animesUnicos, esMayorEdad);
+        animesUnicos = filtrarHentai(animesUnicos);
 
         results.innerHTML = '';
         animesUnicos.forEach(anime => {
@@ -341,222 +324,6 @@ async function buscarAnime(query = '', genres = []) {
 }
 
 
-if (perfilLink) {
-    perfilLink.addEventListener('click', (e) => {
-        const loggedIn = localStorage.getItem('loggedIn');
-        if (loggedIn) {
-            perfilLink.href = '../pages/perfil.html';
-        } else {
-            e.preventDefault();
-            loginModal.style.display = 'block';
-            perfilLink.href = '#';
-        }
-    });
-}
-
-
-// LOGIN
-if (closeModal) {
-    closeModal.addEventListener('click', () => {
-        loginModal.style.display = 'none';
-        loginForm.reset();
-        const errorDiv = document.getElementById("loginErrorMessage");
-        if (errorDiv) {
-            errorDiv.textContent = "";
-            errorDiv.style.display = "none";
-        }
-    });
-}
-
-window.addEventListener('click', (event) => {
-    if (event.target === loginModal) {
-        loginModal.style.display = 'none';
-        loginForm.reset();
-        const errorDiv = document.getElementById("loginErrorMessage");
-        if (errorDiv) {
-            errorDiv.textContent = "";
-            errorDiv.style.display = "none";
-        }
-    }
-});
-
-if (loginForm) {
-    loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const email = loginForm.email.value.trim();
-        const password = loginForm.password.value.trim();
-
-        const errorDiv = document.getElementById("loginErrorMessage");
-        errorDiv.style.display = "none";
-        errorDiv.textContent = "";
-
-        const loginResult = await loginUser(email, password);
-
-        if (loginResult.success) {
-            loginModal.style.display = "none";
-            localStorage.setItem('loggedIn', 'true');
-            if (loginResult.userData.username) localStorage.setItem('username', loginResult.userData.username);
-            if (loginResult.userData.email) localStorage.setItem('email', loginResult.userData.email);
-
-            // Redirigir a perfil
-            window.location.href = "../pages/perfil.html";
-        } else {
-            errorDiv.textContent = loginResult.message || "Error en el inicio de sesión.";
-            errorDiv.style.display = "block";
-        }
-    });
-}
-
-
-// REGISTRO
-if (registerLink) {
-    registerLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (loginModal) loginModal.style.display = 'none';
-        if (registerModal) registerModal.style.display = 'block';
-    });
-}
-
-if (closeRegisterModal) {
-    closeRegisterModal.addEventListener('click', () => {
-        if (registerModal) registerModal.style.display = 'none';
-        if (registerForm) registerForm.reset();
-        document.querySelectorAll("#registerModal .error-message").forEach(el => el.textContent = "");
-    });
-}
-
-window.addEventListener('click', (event) => {
-    if (event.target === registerModal) {
-        registerModal.style.display = 'none';
-        registerForm.reset();
-        document.querySelectorAll("#registerModal .error-message").forEach(el => el.textContent = "");
-    }
-});
-
-if (registerForm) {
-    registerForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        document.querySelectorAll(".error-message").forEach(el => el.textContent = "");
-
-        const username = registerForm.regUsername.value.trim();
-        const email = registerForm.regEmail.value.trim();
-        const password = registerForm.regPassword.value.trim();
-        const repeatPassword = registerForm.regPasswordRepeat.value.trim();
-        const birthday = registerForm.regBirthdate.value.trim();
-
-        let valid = true;
-
-        if (!username) {
-            document.getElementById("errorUsername").textContent = "El usuario es obligatorio.";
-            valid = false;
-        }
-        if (!email) {
-            document.getElementById("errorEmail").textContent = "El correo electrónico es obligatorio.";
-            valid = false;
-        }
-        if (!password) {
-            document.getElementById("errorPassword").textContent = "La contraseña es obligatoria.";
-            valid = false;
-        }
-        if (!repeatPassword) {
-            document.getElementById("errorPasswordRepeat").textContent = "Repite la contraseña.";
-            valid = false;
-        }
-        if (!birthday) {
-            document.getElementById("errorBirthdate").textContent = "La fecha de nacimiento es obligatoria.";
-            valid = false;
-        }
-
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-        if (password && !passwordRegex.test(password)) {
-            document.getElementById("errorPassword").textContent = "La contraseña debe tener mínimo 8 caracteres, incluir mayúsculas, minúsculas y números.";
-            valid = false;
-        }
-
-        if (password && repeatPassword && password !== repeatPassword) {
-            document.getElementById("errorPasswordRepeat").textContent = "Las contraseñas no coinciden.";
-            valid = false;
-        }
-
-        if (!valid) return;
-
-        try {
-            const response = await fetch("https://web-production-62dc.up.railway.app/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ username, email, password, birthday })
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                localStorage.setItem('loggedIn', 'true');
-                localStorage.setItem('username', username);
-                localStorage.setItem('email', email);
-
-                registerModal.style.display = "none";
-                registerForm.reset();
-                window.location.href = "../pages/perfil.html";
-            } else {
-                alert("Error: " + result.message);
-            }
-        } catch (error) {
-            console.error("Error en fetch de registro:", error);
-        }
-    });
-}
-
-
-function tiene18anos(birthday) {
-    if (!birthday) return false;
-
-    const fechaNacimiento = new Date(birthday);
-    const hoy = new Date();
-
-    let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
-    const mesDiff = hoy.getMonth() - fechaNacimiento.getMonth();
-    const diaDiff = hoy.getDate() - fechaNacimiento.getDate();
-
-    // Ajustar edad si no ha cumplido años este año
-    if (mesDiff < 0 || (mesDiff === 0 && diaDiff < 0)) {
-        edad--;
-    }
-
-    return edad >= 18;
-}
-
-
-async function loginUser(email, password) {
-    try {
-        const response = await fetch("/login", {
-            method: "POST",
-            body: JSON.stringify({ email, password }),
-            headers: { "Content-Type": "application/json" },
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            const esMayorEdad = tiene18anos(data.birthday);
-            localStorage.setItem("esMayorEdad", String(esMayorEdad));
-            mostrarAnimes(esMayorEdad);
-
-            return { success: true, esMayorEdad, userData: data };
-        } else {
-            alert(data.message);
-            return { success: false, message: data.message };
-        }
-    } catch (error) {
-        console.error("Error en login:", error);
-        return { success: false, message: "Error en la conexión" };
-    }
-}
-
-
 document.addEventListener("DOMContentLoaded", () => {
     // Código para menú hamburguesa
     const hamburger = document.getElementById("hamburger");
@@ -565,29 +332,27 @@ document.addEventListener("DOMContentLoaded", () => {
     if (hamburger && navLinks) {
         hamburger.addEventListener("click", (e) => {
             e.stopPropagation();
-            navLinks.classList.toggle("active");
+            const isOpen = navLinks.classList.toggle("active");
+            hamburger.setAttribute("aria-expanded", String(isOpen));
+            hamburger.setAttribute("aria-label", isOpen ? "Cerrar menú" : "Abrir menú");
         });
 
         navLinks.addEventListener("click", (e) => {
             e.stopPropagation();
+            if (e.target.closest("a")) {
+                navLinks.classList.remove("active");
+                hamburger.setAttribute("aria-expanded", "false");
+                hamburger.setAttribute("aria-label", "Abrir menú");
+            }
         });
 
         document.addEventListener("click", () => {
             navLinks.classList.remove("active");
+            hamburger.setAttribute("aria-expanded", "false");
+            hamburger.setAttribute("aria-label", "Abrir menú");
         });
     }
 
-    // Código para mostrar/ocultar el enlace favoritos
-    const favoritosLink = document.getElementById('favoritosLink');
-    const loggedInUser = localStorage.getItem('username');
-
-    if (favoritosLink) {
-        if (loggedInUser) {
-            favoritosLink.style.display = 'block';
-        } else {
-            favoritosLink.style.display = 'none';
-        }
-    }
 });
 
 
@@ -602,29 +367,46 @@ async function cargarContenidoPrincipal() {
 
 
 // FILTROS
-filterButton.addEventListener('click', () => {
-    filterDropdown.classList.toggle('hidden');
-});
+if (filterButton && filterDropdown) {
+    filterButton.addEventListener('click', () => {
+        filterDropdown.classList.toggle('hidden');
+    });
+}
+
+if (clearFiltersButton) {
+    clearFiltersButton.addEventListener('click', () => {
+        if (input) {
+            input.value = '';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        selectedGenres = [];
+        document.querySelectorAll('input[name="genre"]:checked').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        if (filterDropdown) filterDropdown.classList.add('hidden');
+    });
+}
 
 document.addEventListener('click', (event) => {
-    if (!filterDropdown.contains(event.target) && !filterButton.contains(event.target)) {
+    if (filterDropdown && filterButton && !filterDropdown.contains(event.target) && !filterButton.contains(event.target)) {
         filterDropdown.classList.add('hidden');
     }
 });
 
-document.getElementById("applyFilters").addEventListener("click", async () => {
+const applyFiltersButton = document.getElementById("applyFilters");
+if (applyFiltersButton) applyFiltersButton.addEventListener("click", async () => {
     const query = document.getElementById("searchInput").value.trim();
 
-    const selectedGenres = Array.from(document.querySelectorAll('input[name="genre"]:checked'))
+    selectedGenres = Array.from(document.querySelectorAll('input[name="genre"]:checked'))
         .map(cb => genreMap[cb.value])
         .filter(id => id !== undefined);
 
     const resultsContainer = document.getElementById("results");
 
-    const esMayorEdad = localStorage.getItem("esMayorEdad") === "true";
-
-    if (!esMayorEdad && selectedGenres.includes(12)) {
-        resultsContainer.innerHTML = "<p>No puedes buscar contenido hentai si no eres mayor de edad.</p>";
+    if (selectedGenres.includes(12)) {
+        resultsContainer.innerHTML = "<p>Este género no está disponible.</p>";
         loading.style.display = 'none';
         document.getElementById("latestReleases").style.display = "none";
         document.getElementById("upcomingReleases").style.display = "none";

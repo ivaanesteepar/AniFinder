@@ -5,23 +5,6 @@ let primeraCarga = true;
 const cacheAnimesPorPagina = {};
 
 
-async function fetchConRetry(url, delayMs = 2000) {
-  const retries = 3; // 3 reintentos
-  for (let i = 0; i <= retries; i++) {
-    const resp = await fetch(url);
-    if (resp.status === 429) {
-      if (i === retries) {
-        throw new Error('Demasiados intentos: rate limit persistente');
-      }
-      console.warn(`Rate limit excedido, esperando ${delayMs}ms antes de reintentar...`);
-      await new Promise(r => setTimeout(r, delayMs));
-    } else {
-      return resp;
-    }
-  }
-}
-
-
 async function obtenerAnimesPorPagina(pagina) {
   const spinner = document.getElementById('spinner');
 
@@ -31,13 +14,13 @@ async function obtenerAnimesPorPagina(pagina) {
 
   try {
     if (totalPaginas === null) {
-      const urlPagina1 = `https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=1`;
-      const resp1 = await fetchConRetry(urlPagina1);
+      const urlPagina1 = `https://api.tenrai.org/v1/top/anime?filter=bypopularity&page=1`;
+      const resp1 = await AniFinderAPI.fetchAnimeApi(urlPagina1);
       const datos1 = await resp1.json();
       let lastVisible = datos1.pagination.last_visible_page;
 
-      const urlUltima = `https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=${lastVisible}`;
-      const respUlt = await fetchConRetry(urlUltima);
+      const urlUltima = `https://api.tenrai.org/v1/top/anime?filter=bypopularity&page=${lastVisible}`;
+      const respUlt = await AniFinderAPI.fetchAnimeApi(urlUltima);
       const datosUlt = await respUlt.json();
 
       if (datosUlt.pagination?.last_visible_page && datosUlt.pagination.last_visible_page !== lastVisible) {
@@ -62,8 +45,8 @@ async function obtenerAnimesPorPagina(pagina) {
     }
 
     // Si no está en cache, hacemos la petición
-    const url = `https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=${pagina}`;
-    const respuesta = await fetchConRetry(url);
+    const url = `https://api.tenrai.org/v1/top/anime?filter=bypopularity&page=${pagina}`;
+    const respuesta = await AniFinderAPI.fetchAnimeApi(url);
     const datos = await respuesta.json();
 
     if (!datos.data || !Array.isArray(datos.data)) {
@@ -113,7 +96,7 @@ function mostrarAnimes(animes) {
   });
 
   const maxPopularidad = 5000;
-  const animesPorPagina = 25; // Estándar de la API de Jikan
+  const animesPorPagina = 25; // Tamaño estándar de página del catálogo
   const inicioRanking = (paginaActual - 1) * animesPorPagina + 1;
 
   animesUnicos.forEach((anime, index) => {

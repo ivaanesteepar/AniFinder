@@ -20,7 +20,7 @@ Buscador web estático de anime que consulta directamente la API pública de **T
 ### Opción 1: Ejecutar online
 
 Accede directamente a la aplicación en el siguiente enlace:  
-👉 [AniFinder en GitHub Pages](https://ivaanesteepar.github.io/AniFinder/)
+[AniFinder](https://ivaanesteepar.github.io/AniFinder/)
 
 ### Ejecutar en local
 
